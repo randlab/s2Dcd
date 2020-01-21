@@ -19,10 +19,12 @@ For more details...
 ********************************
 
 See the directory `docs` for more details about:
+
 * documentation
 * installation
 * example
-etc.
+
+and more.
 
 
 
