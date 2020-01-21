@@ -1,0 +1,111 @@
+\indexentry{s2Dcd.s2Dcd (module)@\spxentry{s2Dcd.s2Dcd}\spxextra{module}|hyperpage}{19}
+\indexentry{GetWhereToAddData() (in module s2Dcd.s2Dcd)@\spxentry{GetWhereToAddData()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{21}
+\indexentry{SeqStep (class in s2Dcd.s2Dcd)@\spxentry{SeqStep}\spxextra{class in s2Dcd.s2Dcd}|hyperpage}{21}
+\indexentry{create\_list() (s2Dcd.s2Dcd.SeqStep method)@\spxentry{create\_list()}\spxextra{s2Dcd.s2Dcd.SeqStep method}|hyperpage}{21}
+\indexentry{simul() (s2Dcd.s2Dcd.SeqStep method)@\spxentry{simul()}\spxextra{s2Dcd.s2Dcd.SeqStep method}|hyperpage}{21}
+\indexentry{adaptAuxVarFile() (in module s2Dcd.s2Dcd)@\spxentry{adaptAuxVarFile()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{22}
+\indexentry{addVtk2HdArchive() (in module s2Dcd.s2Dcd)@\spxentry{addVtk2HdArchive()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{22}
+\indexentry{add\_gslib\_pointdata() (in module s2Dcd.s2Dcd)@\spxentry{add\_gslib\_pointdata()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{22}
+\indexentry{add\_hd() (in module s2Dcd.s2Dcd)@\spxentry{add\_hd()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{23}
+\indexentry{all\_segms0() (in module s2Dcd.s2Dcd)@\spxentry{all\_segms0()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{23}
+\indexentry{check\_ti\_file() (in module s2Dcd.s2Dcd)@\spxentry{check\_ti\_file()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{23}
+\indexentry{create\_in\_file4Impala() (in module s2Dcd.s2Dcd)@\spxentry{create\_in\_file4Impala()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{23}
+\indexentry{create\_in\_file4MPDS() (in module s2Dcd.s2Dcd)@\spxentry{create\_in\_file4MPDS()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{24}
+\indexentry{create\_lists() (in module s2Dcd.s2Dcd)@\spxentry{create\_lists()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{24}
+\indexentry{create\_seq() (in module s2Dcd.s2Dcd)@\spxentry{create\_seq()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{25}
+\indexentry{file\_name\_sec() (in module s2Dcd.s2Dcd)@\spxentry{file\_name\_sec()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{25}
+\indexentry{matrioska\_interval() (in module s2Dcd.s2Dcd)@\spxentry{matrioska\_interval()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{25}
+\indexentry{numpy2hd4Impala() (in module s2Dcd.s2Dcd)@\spxentry{numpy2hd4Impala()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{26}
+\indexentry{numpy2hd4MPDS() (in module s2Dcd.s2Dcd)@\spxentry{numpy2hd4MPDS()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{26}
+\indexentry{print\_result() (in module s2Dcd.s2Dcd)@\spxentry{print\_result()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{26}
+\indexentry{print\_sim\_info() (in module s2Dcd.s2Dcd)@\spxentry{print\_sim\_info()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{26}
+\indexentry{sim\_run() (in module s2Dcd.s2Dcd)@\spxentry{sim\_run()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{26}
+\indexentry{split\_segms() (in module s2Dcd.s2Dcd)@\spxentry{split\_segms()}\spxextra{in module s2Dcd.s2Dcd}|hyperpage}{27}
+\indexentry{s2Dcd.deesse (module)@\spxentry{s2Dcd.deesse}\spxextra{module}|hyperpage}{27}
+\indexentry{Param (class in s2Dcd.deesse)@\spxentry{Param}\spxextra{class in s2Dcd.deesse}|hyperpage}{28}
+\indexentry{print\_blockdata() (s2Dcd.deesse.Param method)@\spxentry{print\_blockdata()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_blockdata\_intro() (s2Dcd.deesse.Param method)@\spxentry{print\_blockdata\_intro()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_consi() (s2Dcd.deesse.Param method)@\spxentry{print\_consi()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_difile() (s2Dcd.deesse.Param method)@\spxentry{print\_difile()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_distthr() (s2Dcd.deesse.Param method)@\spxentry{print\_distthr()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_disttype() (s2Dcd.deesse.Param method)@\spxentry{print\_disttype()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_dpset() (s2Dcd.deesse.Param method)@\spxentry{print\_dpset()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_file() (s2Dcd.deesse.Param method)@\spxentry{print\_file()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_homo() (s2Dcd.deesse.Param method)@\spxentry{print\_homo()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_maskimage() (s2Dcd.deesse.Param method)@\spxentry{print\_maskimage()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_max\_dens() (s2Dcd.deesse.Param method)@\spxentry{print\_max\_dens()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_max\_nod() (s2Dcd.deesse.Param method)@\spxentry{print\_max\_nod()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_maxscan() (s2Dcd.deesse.Param method)@\spxentry{print\_maxscan()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_neigh\_intro() (s2Dcd.deesse.Param method)@\spxentry{print\_neigh\_intro()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_neighs() (s2Dcd.deesse.Param method)@\spxentry{print\_neighs()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{29}
+\indexentry{print\_norm() (s2Dcd.deesse.Param method)@\spxentry{print\_norm()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_out\_report() (s2Dcd.deesse.Param method)@\spxentry{print\_out\_report()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_out\_set() (s2Dcd.deesse.Param method)@\spxentry{print\_out\_set()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_post() (s2Dcd.deesse.Param method)@\spxentry{print\_post()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_proconst() (s2Dcd.deesse.Param method)@\spxentry{print\_proconst()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_proconst\_intro() (s2Dcd.deesse.Param method)@\spxentry{print\_proconst\_intro()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_pyramids() (s2Dcd.deesse.Param method)@\spxentry{print\_pyramids()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_realnb() (s2Dcd.deesse.Param method)@\spxentry{print\_realnb()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_reldist() (s2Dcd.deesse.Param method)@\spxentry{print\_reldist()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_rot() (s2Dcd.deesse.Param method)@\spxentry{print\_rot()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_seed() (s2Dcd.deesse.Param method)@\spxentry{print\_seed()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_sim\_grid() (s2Dcd.deesse.Param method)@\spxentry{print\_sim\_grid()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_sim\_var() (s2Dcd.deesse.Param method)@\spxentry{print\_sim\_var()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_simpath() (s2Dcd.deesse.Param method)@\spxentry{print\_simpath()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_ti() (s2Dcd.deesse.Param method)@\spxentry{print\_ti()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_tol() (s2Dcd.deesse.Param method)@\spxentry{print\_tol()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{print\_weight() (s2Dcd.deesse.Param method)@\spxentry{print\_weight()}\spxextra{s2Dcd.deesse.Param method}|hyperpage}{30}
+\indexentry{TiInfo (class in s2Dcd.deesse)@\spxentry{TiInfo}\spxextra{class in s2Dcd.deesse}|hyperpage}{30}
+\indexentry{VarInfo (class in s2Dcd.deesse)@\spxentry{VarInfo}\spxextra{class in s2Dcd.deesse}|hyperpage}{31}
+\indexentry{s2Dcd.utili (module)@\spxentry{s2Dcd.utili}\spxextra{module}|hyperpage}{31}
+\indexentry{add\_file\_id() (in module s2Dcd.utili)@\spxentry{add\_file\_id()}\spxextra{in module s2Dcd.utili}|hyperpage}{31}
+\indexentry{dtype\_fmt() (in module s2Dcd.utili)@\spxentry{dtype\_fmt()}\spxextra{in module s2Dcd.utili}|hyperpage}{32}
+\indexentry{print\_start() (in module s2Dcd.utili)@\spxentry{print\_start()}\spxextra{in module s2Dcd.utili}|hyperpage}{32}
+\indexentry{print\_stop() (in module s2Dcd.utili)@\spxentry{print\_stop()}\spxextra{in module s2Dcd.utili}|hyperpage}{32}
+\indexentry{progress\_bar() (in module s2Dcd.utili)@\spxentry{progress\_bar()}\spxextra{in module s2Dcd.utili}|hyperpage}{32}
+\indexentry{progress\_bar\_end() (in module s2Dcd.utili)@\spxentry{progress\_bar\_end()}\spxextra{in module s2Dcd.utili}|hyperpage}{32}
+\indexentry{savepdf() (in module s2Dcd.utili)@\spxentry{savepdf()}\spxextra{in module s2Dcd.utili}|hyperpage}{32}
+\indexentry{skip\_ccomments() (in module s2Dcd.utili)@\spxentry{skip\_ccomments()}\spxextra{in module s2Dcd.utili}|hyperpage}{32}
+\indexentry{s2Dcd.grid (module)@\spxentry{s2Dcd.grid}\spxextra{module}|hyperpage}{33}
+\indexentry{Grid (class in s2Dcd.grid)@\spxentry{Grid}\spxextra{class in s2Dcd.grid}|hyperpage}{33}
+\indexentry{cells() (s2Dcd.grid.Grid property)@\spxentry{cells()}\spxextra{s2Dcd.grid.Grid property}|hyperpage}{34}
+\indexentry{compute\_max() (s2Dcd.grid.Grid method)@\spxentry{compute\_max()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{get\_cells() (s2Dcd.grid.Grid method)@\spxentry{get\_cells()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{get\_center() (s2Dcd.grid.Grid method)@\spxentry{get\_center()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{get\_lx() (s2Dcd.grid.Grid method)@\spxentry{get\_lx()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{get\_ly() (s2Dcd.grid.Grid method)@\spxentry{get\_ly()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{get\_lz() (s2Dcd.grid.Grid method)@\spxentry{get\_lz()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{get\_points() (s2Dcd.grid.Grid method)@\spxentry{get\_points()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{get\_size() (s2Dcd.grid.Grid method)@\spxentry{get\_size()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{lx() (s2Dcd.grid.Grid property)@\spxentry{lx()}\spxextra{s2Dcd.grid.Grid property}|hyperpage}{34}
+\indexentry{ly() (s2Dcd.grid.Grid property)@\spxentry{ly()}\spxextra{s2Dcd.grid.Grid property}|hyperpage}{34}
+\indexentry{lz() (s2Dcd.grid.Grid property)@\spxentry{lz()}\spxextra{s2Dcd.grid.Grid property}|hyperpage}{34}
+\indexentry{origin() (s2Dcd.grid.Grid method)@\spxentry{origin()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{points() (s2Dcd.grid.Grid property)@\spxentry{points()}\spxextra{s2Dcd.grid.Grid property}|hyperpage}{34}
+\indexentry{print4gslib() (s2Dcd.grid.Grid method)@\spxentry{print4gslib()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{print\_intervals() (s2Dcd.grid.Grid method)@\spxentry{print\_intervals()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{34}
+\indexentry{shape() (s2Dcd.grid.Grid method)@\spxentry{shape()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{35}
+\indexentry{spacing() (s2Dcd.grid.Grid method)@\spxentry{spacing()}\spxextra{s2Dcd.grid.Grid method}|hyperpage}{35}
+\indexentry{sg\_info() (in module s2Dcd.grid)@\spxentry{sg\_info()}\spxextra{in module s2Dcd.grid}|hyperpage}{35}
+\indexentry{s2Dcd.gslibnumpy (module)@\spxentry{s2Dcd.gslibnumpy}\spxextra{module}|hyperpage}{35}
+\indexentry{VarioStruct (class in s2Dcd.gslibnumpy)@\spxentry{VarioStruct}\spxextra{class in s2Dcd.gslibnumpy}|hyperpage}{36}
+\indexentry{print4csv() (s2Dcd.gslibnumpy.VarioStruct method)@\spxentry{print4csv()}\spxextra{s2Dcd.gslibnumpy.VarioStruct method}|hyperpage}{36}
+\indexentry{print4par() (s2Dcd.gslibnumpy.VarioStruct method)@\spxentry{print4par()}\spxextra{s2Dcd.gslibnumpy.VarioStruct method}|hyperpage}{36}
+\indexentry{Variogram (class in s2Dcd.gslibnumpy)@\spxentry{Variogram}\spxextra{class in s2Dcd.gslibnumpy}|hyperpage}{36}
+\indexentry{plot() (s2Dcd.gslibnumpy.Variogram method)@\spxentry{plot()}\spxextra{s2Dcd.gslibnumpy.Variogram method}|hyperpage}{36}
+\indexentry{plot\_3dir() (s2Dcd.gslibnumpy.Variogram method)@\spxentry{plot\_3dir()}\spxextra{s2Dcd.gslibnumpy.Variogram method}|hyperpage}{37}
+\indexentry{print4csv() (s2Dcd.gslibnumpy.Variogram method)@\spxentry{print4csv()}\spxextra{s2Dcd.gslibnumpy.Variogram method}|hyperpage}{37}
+\indexentry{print4par() (s2Dcd.gslibnumpy.Variogram method)@\spxentry{print4par()}\spxextra{s2Dcd.gslibnumpy.Variogram method}|hyperpage}{37}
+\indexentry{align\_parfile() (in module s2Dcd.gslibnumpy)@\spxentry{align\_parfile()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{37}
+\indexentry{exponential() (in module s2Dcd.gslibnumpy)@\spxentry{exponential()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{37}
+\indexentry{gaussian() (in module s2Dcd.gslibnumpy)@\spxentry{gaussian()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{37}
+\indexentry{gslib2numpy() (in module s2Dcd.gslibnumpy)@\spxentry{gslib2numpy()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{37}
+\indexentry{gslib2numpy\_onevar() (in module s2Dcd.gslibnumpy)@\spxentry{gslib2numpy\_onevar()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{38}
+\indexentry{gslib\_points2numpy() (in module s2Dcd.gslibnumpy)@\spxentry{gslib\_points2numpy()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{39}
+\indexentry{gslib\_slice() (in module s2Dcd.gslibnumpy)@\spxentry{gslib\_slice()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{39}
+\indexentry{numpy2dat() (in module s2Dcd.gslibnumpy)@\spxentry{numpy2dat()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{40}
+\indexentry{numpy2gslib() (in module s2Dcd.gslibnumpy)@\spxentry{numpy2gslib()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{40}
+\indexentry{numpy2gslib\_points() (in module s2Dcd.gslibnumpy)@\spxentry{numpy2gslib\_points()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{41}
+\indexentry{power() (in module s2Dcd.gslibnumpy)@\spxentry{power()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{41}
+\indexentry{spherical() (in module s2Dcd.gslibnumpy)@\spxentry{spherical()}\spxextra{in module s2Dcd.gslibnumpy}|hyperpage}{41}
+\indexentry{s2Dcd.ext (module)@\spxentry{s2Dcd.ext}\spxextra{module}|hyperpage}{42}

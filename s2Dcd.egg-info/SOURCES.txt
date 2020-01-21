@@ -1,0 +1,7 @@
+README.rst
+setup.py
+s2Dcd.egg-info/PKG-INFO
+s2Dcd.egg-info/SOURCES.txt
+s2Dcd.egg-info/dependency_links.txt
+s2Dcd.egg-info/requires.txt
+s2Dcd.egg-info/top_level.txt

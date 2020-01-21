@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; s2Dcd 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Code purpose" href="purpose.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> s2Dcd
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="purpose.html">Code purpose</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-numpy-and-pandas-installation">Python, numpy and pandas installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-easy-way">The “easy” way</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ms-windows">MS Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#linux">Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mac-os-x">Mac OS X</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#the-multiple-point-simulation-engine-deesse">The multiple-point simulation engine <cite>DeeSse</cite></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">MS Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Linux</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-of-the-module-s2dcd-and-other-python-tools">Installation of the module <cite>s2Dcd</cite> and other python tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#some-details-about-the-main-modules">Some details about the main modules:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes.html">Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendices.html">Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">s2Dcd</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>All the modules included in the “package” are written in Python
+(version 3.X), which is platform independent. Therefore, the “package”
+should work on Linux, Mac OS X and Windows. Some tests were performed
+on all the three platforms, but at the moment the MPS engines
+implemented in the <cite>s2Dcd</cite> are available only for Linux and Windows.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://python.org">Python</a> (tested version 3.6.9 on Linux). Older versions should also work.</p></li>
+<li><p>If you are on Linux, you will also need the python development packages.</p></li>
+<li><p>The Python numerical library <a class="reference external" href="http://numpy.scipy.org/">numpy</a> and
+<a class="reference external" href="http://pandas.pydata.org/">pandas</a> and the Python package installer <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p></li>
+<li><p>The Multiple-point statistics simulation engines <cite>DeeSse</cite> and/or <cite>Impala</cite>.</p></li>
+</ul>
+<div class="sidebar">
+<p class="sidebar-title">Suggested software (optional)</p>
+<p>Some software that you might find useful:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.paraview.org/">ParaView</a>, useful to visualize the
+<cite>VTK</cite> output of <cite>Impala</cite>.</p></li>
+<li><p><a class="reference external" href="http://sgems.sourceforge.net/">SGeMS</a>, useful to visualize the
+<cite>GSLIB</cite> output of <cite>DeeSse</cite>.</p></li>
+</ul>
+</div>
+<div class="section" id="python-numpy-and-pandas-installation">
+<h3>Python, numpy and pandas installation<a class="headerlink" href="#python-numpy-and-pandas-installation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="the-easy-way">
+<h4>The “easy” way<a class="headerlink" href="#the-easy-way" title="Permalink to this headline">¶</a></h4>
+<p>If you do not want to install all the Python packages separately,
+there are some bundled distributions that allow to install all the
+required libraries in “one click”. One of this distribution is
+<a class="reference external" href="https://www.continuum.io/why-anaconda">Anaconda</a>, which is
+available for MS Windows, Linux and Mac OS X (note however that this
+will require 200/300 Mbytes on your hard drive). Alternatively, you
+can use another “bundled distribution” or install each python package
+separately as explained in the following sections.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When you download Anaconda, select the Python <em>3.X</em>
+version and <strong>NOT</strong> the one for Python <em>2.X</em>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Personally, when working on Linux, I prefer to install Python packages
+using the OS package manager.</p>
+</div>
+</div>
+<div class="section" id="ms-windows">
+<h4>MS Windows<a class="headerlink" href="#ms-windows" title="Permalink to this headline">¶</a></h4>
+<p>If you are on MS Windows, I strongly suggest you to use something like
+the aforementioned bundled distribution <cite>Anaconda</cite>.</p>
+</div>
+<div class="section" id="linux">
+<h4>Linux<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h4>
+<p>Use you package manager, or <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span></code> to install
+<code class="docutils literal notranslate"><span class="pre">python3</span></code>, <code class="docutils literal notranslate"><span class="pre">python3-dev</span></code>, <code class="docutils literal notranslate"><span class="pre">python3-numpy</span></code> and
+<code class="docutils literal notranslate"><span class="pre">python3-pandas</span></code>.  If <cite>pandas</cite> is not available for your
+distribution, please check on the last installation instructions <a class="reference external" href="http://pandas.pydata.org/">here</a>.</p>
+</div>
+<div class="section" id="mac-os-x">
+<h4>Mac OS X<a class="headerlink" href="#mac-os-x" title="Permalink to this headline">¶</a></h4>
+<p>Python and numpy are available for Mac OS X too. However, at the
+moment the binaries of the MPS simulation engines with an interface to
+the <cite>s2Dcd</cite> are not available for Mac OS X. You can still use some
+utility scripts to work with <cite>GSLIB</cite> files.</p>
+</div>
+</div>
+<div class="section" id="the-multiple-point-simulation-engine-deesse">
+<h3>The multiple-point simulation engine <cite>DeeSse</cite><a class="headerlink" href="#the-multiple-point-simulation-engine-deesse" title="Permalink to this headline">¶</a></h3>
+<p>Actually, the python module <cite>s2Dcd</cite> is only a wrapper for a MPS
+simulation engine. For the moment, the implementation allows to use the
+MPS simulation engine <cite>DeeSse</cite>.</p>
+<p>The executable of your MPS simulation engine (in the case of the
+<cite>DeeSse</cite> they are called <code class="docutils literal notranslate"><span class="pre">deesse</span></code> and <code class="docutils literal notranslate"><span class="pre">deesseOMP</span></code>; add <code class="docutils literal notranslate"><span class="pre">.exe</span></code> if
+you are working on MS Windows), should be located in your <code class="docutils literal notranslate"><span class="pre">bin</span></code>
+directory, in the working directory or in a directory listed in the
+<code class="docutils literal notranslate"><span class="pre">PATH</span></code> environment variable.</p>
+<div class="sidebar">
+<p class="sidebar-title">Adapt the names of the MPS binaries</p>
+<p>If the provided binaries have a different name…</p>
+<p>The name of the binary of the simulation code can be changed
+using the variable <cite>s2Dcd.mps_exes</cite>, which is a Python dictionary.</p>
+</div>
+<p>To add a directory (i.e. <code class="docutils literal notranslate"><span class="pre">C:\Users\alex\my_dir</span></code> for MS Windows, or <code class="docutils literal notranslate"><span class="pre">/home/alex/my_dir</span></code>)
+to your path variable do:</p>
+<div class="section" id="id1">
+<h4>MS Windows<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li><p><cite>Start &gt; Control Panel &gt; System and Security &gt; Advances System Settings</cite></p></li>
+<li><p>Click on the button <cite>Environment variables</cite> at the bottom right.</p></li>
+<li><p>Under <cite>System Variables</cite>, select the line containing the variable <cite>Path</cite>.</p></li>
+<li><p>Edit the variable: add to the end of the variable value  <code class="docutils literal notranslate"><span class="pre">;C:\Users\alex\my_dir\</span></code>
+(note the comma <strong>;</strong>)</p></li>
+</ol>
+</div>
+<div class="section" id="id2">
+<h4>Linux<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>Add the following line to your <cite>.bash_aliases</cite> file (eventually, create it and make
+sure that your <cite>.bashrc</cite> loads it):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export PATH=${PATH}:/home/alex/my_dir
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before testing the <cite>s2Dcd</cite> module, check if the MPS simulation
+engines work correctly.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="installation-of-the-module-s2dcd-and-other-python-tools">
+<h2>Installation of the module <cite>s2Dcd</cite> and other python tools<a class="headerlink" href="#installation-of-the-module-s2dcd-and-other-python-tools" title="Permalink to this headline">¶</a></h2>
+<p>Download the sources from Github. From the command line (use the Anaconda prompt if you installed it), move into the directory
+<code class="docutils literal notranslate"><span class="pre">s2Dcd</span></code> (if needed, unpack it)  and type the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>To check if the installation was successful, you can run the python shell and try import the
+main module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">s2Dcd.s2Dcd</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="some-details-about-the-main-modules">
+<h2>Some details about the main modules:<a class="headerlink" href="#some-details-about-the-main-modules" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt><cite>s2Dcd.py</cite></dt><dd><p>the main module containing for the functions for the <cite>s2Dcd</cite> simulations.</p>
+</dd>
+<dt><cite>deesse.py</cite></dt><dd><p>a simple interface to the parameters required by <cite>DeeSse</cite>.</p>
+</dd>
+<dt><cite>gslibnumpy.py</cite></dt><dd><p>to convert from numpy and GSLIB and vice versa.</p>
+</dd>
+<dt><cite>utili.py</cite></dt><dd><p>some simple utilities…</p>
+</dd>
+</dl>
+<p>More details about these in section <a class="reference internal" href="appendices.html#appendices"><span class="std std-ref">Appendices</span></a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="purpose.html" class="btn btn-neutral float-left" title="Code purpose" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Alessandro Comunian
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

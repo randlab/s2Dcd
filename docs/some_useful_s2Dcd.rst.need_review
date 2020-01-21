@@ -1,0 +1,13 @@
+Some useful functions
+================================================================================
+Some details about the main function and classes used in the examples.
+
+.. autoclass:: mpds_interface.ParamMPDS
+    :noindex:
+    :members: __init__ 
+
+.. autofunction:: utili.print_start
+    :noindex:
+
+TO BE CONTINUED...
+

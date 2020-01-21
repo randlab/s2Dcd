@@ -1,0 +1,234 @@
+/* SIMULATION GRID (SG) */
+52    71    64   // size in each direction
+1.0    1.0    1.0    // spacing in each direction
+  0.0    0.0   0.0  // origin
+
+/* SIMULATION VARIABLES */
+/* Number of simulation variable(s), and for each variable:
+   variable name and output flag (0 / 1). */
+1
+facies      1
+
+/* OUTPUT SETTINGS FOR SIMULATION */
+/* Key word and required name(s) or prefix, for output of the realizations:
+      - OUTPUT_SIM_NO_FILE:
+           no file in output,
+      - OUTPUT_SIM_ALL_IN_ONE_FILE:
+           one file in output,
+           requires one file name
+      - OUTPUT_SIM_ONE_FILE_PER_VARIABLE:
+           one file per variable in output (flagged as 1 above),
+           requires as many file name(s) as variable(s) flagged as 1 above
+      - OUTPUT_SIM_ONE_FILE_PER_REALIZATION:
+           one file per realization,
+           requires one prefix (for file name) */
+OUTPUT_SIM_ALL_IN_ONE_FILE 
+test_simul.gslib
+
+/* OUTPUT REPORT */
+/* Flag (0 / 1), and if 1, output report file. */
+1
+test_report.txt
+
+/* TRAINING IMAGE */
+/* Number of training image(s) (nTI >= 1), followed by nTI file(s)
+   (a file can be replaced by the string "_DATA_" which means that the
+   simulation grid itself is taken as training image), and
+   if nTI > 1, one pdf image file (for training images, nTI variables). */
+1
+ti.gslib
+
+/* DATA IMAGE FILE FOR SG */
+/* Number of image file(s) (n >= 0), followed by n file(s). */
+0
+
+/* DATA POINT SET FILE FOR SG */
+/* Number of point set file(s) (n >= 0), followed by n file(s). */
+0
+
+/* MASK IMAGE */
+/* Flag (0: mask not used / 1: mask used) and if 1, mask image file
+   (this image contains one variable on the simulation grid: flag (0 / 1)
+   for each node of the simulation grid that indicates if the variable(s)
+   will be simulated at the corresponding node (flag 1) or not (flag 0). */
+0
+
+/* HOMOTHETY */
+/* 1. Homothety usage, integer (homothetyUsage):
+        - 0: no homothety
+        - 1: homothety without tolerance
+        - 2: homothety with tolerance
+   2a. If homothetyUsage == 1,
+          then for homothety ratio in each direction,
+          first for x, then for y, and then for z-axis direction:
+             - Flag (0 / 1) indicating if given in an image file,
+               followed by
+                  - one value (real) if flag is 0
+                  - name of the image file (one variable) if flag is 1
+   2b. If homothetyUsage == 2,
+          then for homothety ratio in each direction,
+          first for x, then for y, and then for z-axis direction:
+             - Flag (0 / 1) indicating if given in an image file,
+               followed by
+                  - two values (lower and upper bounds) (real) if flag is 0
+                  - name of the image file (two variables) if flag is 1
+*/
+0
+
+/* ROTATION */
+/* 1. Rotation usage, integer (rotationUsage):
+        - 0: no rotation
+        - 1: rotation without tolerance
+        - 2: rotation with tolerance
+   2a. If rotationUsage == 1,
+          then for each angle,
+          first for azimuth, then for dip, and then for plunge:
+             - Flag (0 / 1) indicating if given in an image file,
+               followed by
+                  - one value (real) if flag is 0
+                  - name of the image file (one variable) if flag is 1
+   2b. If rotationUsage == 2,
+          then for each angle,
+          first for azimuth, then for dip, and then for plunge:
+             - Flag (0 / 1) indicating if given in an image file,
+               followed by
+                  - two values (lower and upper bounds) (real) if flag is 0
+                  - name of the image file (two variables) if flag is 1
+*/
+0
+
+/* CONSISTENCY OF CONDITIONING DATA (TOLERANCE RELATIVELY TO THE RANGE OF TRAINING VALUES) */
+/* Maximal accepted extension in both extremities of the range of values in training images
+   for covering the conditioning data values; e.g. if this number is set to 0.05,
+   the conditioning data values can be beyond the range of the values in the training images
+   (in both extremities) of at most 5%; this separately applies to all variables for which
+   the distance is absolute (not relative, see "relative distance flag" below) and the
+   distance type is not 0 (see "distance type" below). */
+0.05
+
+/* NORMALIZATION TYPE (FOR VARIABLES FOR WHICH DISTANCE TYPE IS NOT 0 AND DISTANCE IS ABSOLUTE) */
+/* Available types:
+      - NORMALIZING_LINEAR
+      - NORMALIZING_UNIFORM
+      - NORMALIZING_NORMAL */
+NORMALIZING_LINEAR
+
+/* SEARCH NEIGHBORHOOD PARAMETERS */
+/* A search neighborhood is a 3D ellipsoid, defined by:
+      - search radii (in number of nodes), for each direction
+      - anisotropy ratios, for each direction, i.e. numbers of nodes corresponding
+        to a distance of one, in each direction; for example (1.0, 1.0, 2.0) means
+        that the distance to the central node is the Euclidean distance where
+        the unit (distance=1) corresponds to 1, 1 and 2 nodes for the 1st, 2nd and
+        3rd direction respectively.
+      - angles (azimuth, dip and plunge) defining the rotation that sends the coordinates
+        system xyz onto the coordinates system x'y'z' in which the search radii
+        and the anisotropy ratios are given
+      - power at which the distance is elevated for computing the weight of each
+        node in the search neighborhood
+   Note that
+      - the search neighborhood is delimited by the search radii and the angles
+      - the anisotropy ratios are used only for computing the distance to the central
+        node, from each node in the search neighborhood
+      - the nodes inside the search neighborhood are sorted according to their
+        distance to the central node, from the closest one to the furthest one */
+/* SEARCH NEIGHBORHOOD PARAMETERS FOR VARIABLE #0 */
+120.0  120.0  120.0   // search radius in each direction
+  1.0    1.0    1.0   // anisotropy ratio in each direction
+  0.0    0.0    0.0   // angles (azimuth, dip, plunge in degrees) for rotation
+  0.0                 // power for computing weight according to distance
+
+/* MAXIMAL NUMBER OF NEIGHBORING NODES FOR EACH VARIABLE (as many number(s) as number of variable(s)) */
+20
+
+/* MAXIMAL DENSITY OF NEIGHBORING NODES IN SEARCH NEIGHBORHOOD FOR EACH VARIABLE (as many number(s) as number of variable(s)) */
+1.0
+
+/* RELATIVE DISTANCE FLAG FOR EACH VARIABLE (as many flag(s) (0 / 1) as number of variable(s) */
+0
+
+/* DISTANCE TYPE FOR EACH VARIABLE (as many number(s) as number of variable(s)) */
+/* Available distance (between data events):
+      - 0: non-matching nodes (typically for categorical variable)
+      - 1: L-1 distance
+      - 2: L-2 distance
+      - 3: L-p distance, requires the real positive parameter p
+      - 4: L-infinity distance */
+0
+
+/* WEIGHT FACTOR FOR CONDITIONING DATA, FOR EACH VARIABLE (as many number(s) as number of variable(s)) */
+/* For the computation of distance between data events, if a value is a conditioning
+   data, its corresponding contribution is multiplied by the factor given here. */
+1.0
+
+/* SIMULATION AND PATH PARAMETERS */
+/* Key word for simulation type:
+      - SIM_ONE_BY_ONE:
+           successive simulation of one variable at one node in the simulation grid (4D path)
+      - SIM_VARIABLE_VECTOR:
+           successive simulation of all variable(s) at one node in the simulation grid (3D path) */
+SIM_ONE_BY_ONE
+
+/* Key word for path type:
+      - PATH_RANDOM:
+           random path, for simulation type:
+              - SIM_ONE_BY_ONE     : path visiting all nodes and variables in a random order
+              - SIM_VARIABLE_VECTOR: path visiting all nodes in a random order
+      - PATH_UNILATERAL:
+           unilateral path, for simulation type:
+              - SIM_ONE_BY_ONE: requires a vector of size 4.
+                   Example: u = (0, -2, 1, 0) means that the path will visit all nodes:
+                   randomly in xv-sections, with increasing z-coordinate, and then decreasing y-coordinate.
+              - SIM_VARIABLE_VECTOR: requires a vector of size 3.
+                   Example: u = (-1, 0, 2) means that the path will visit all nodes:
+                   randomly in y-sections, with decreasing x-coordinate, and then increasing z-coordinate.
+           This vector must be given after the key word PATH_UNILATERAL. */
+PATH_RANDOM
+
+/* DISTANCE THRESHOLD FOR EACH VARIABLE (as many number(s) as number of variable(s)) */
+0.01
+
+/* PROBABILITY CONSTRAIN */
+0
+
+
+/* MAXIMAL SCAN FRACTION FOR EACH TI (as many number(s) as number of training image(s)) */
+0.3
+
+/* TOLERANCE */
+/* Tolerance t on the threshold value for flagging nodes:
+   let d(i) be the distance between the data event in the simulation grid and in the training
+   image for the i-th variable and s(i) be the distance threshold for the i-th variable, and let
+   e(i) = max(0, (d(i)-s(i))/s(i)) be the relative error for the i-th variable, i.e. the relative
+   part of the distance d(i) beyond the threshold s(i); during the scan of the training image, a node
+   that minimizes e = max (e(i)) is retained (the scan is stopped if e = 0); if e is greater than the
+   tolerance t (given here), then the current simulated node and all non-conditioning nodes of the
+   data events (one per variable) in the simulation grid are flagged for resimulation (post-processing). */
+0.0
+
+/* POST-PROCESSING */
+/* 1. Maximal number of path(s) (npostProcessingPathMax)
+   2. If npostProcessingPathMax > 0:
+      key word for post-processing parameters (i. e. number of neighboring nodes, distance threshold,
+      maximal scan fraction, and tolerance):
+         - POST_PROCESSING_PARAMETERS_DEFAULT: for default parameters
+         - POST_PROCESSING_PARAMETERS_SAME   : for same parameters as given above
+         - POST_PROCESSING_PARAMETERS_MANUAL : for manual settings
+   3. If npostProcessingPathMax > 0 and POST_PROCESSING_PARAMETERS_MANUAL:
+         MAXIMAL NUMBER OF NEIGHBORING NODES FOR EACH VARIABLE (as many number(s) as number of variable(s))
+         MAXIMAL DENSITY OF NEIGHBORING NODES IN SEARCH NEIGHBORHOOD FOR EACH VARIABLE (as many number(s) as number of variable(s))
+         DISTANCE THRESHOLD FOR EACH VARIABLE (as many number(s) as number of variable(s))
+         MAXIMAL SCAN FRACTION FOR EACH TI (as many number(s) as number of training image(s))
+         TOLERANCE
+*/
+1
+POST_PROCESSING_PARAMETERS_DEFAULT
+
+/* SEED NUMBER AND SEED INCREMENT */
+444
+1
+
+/* NUMBER OF REALIZATIONS */
+1
+
+END

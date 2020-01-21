@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Notes &mdash; s2Dcd 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Publications" href="publications.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> s2Dcd
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="purpose.html">Code purpose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#auxiliary-variables">Auxiliary variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-in-deesse">Implementation in DeeSse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-in-impala">Implementation in Impala</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#licence-issues">Licence Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendices.html">Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">s2Dcd</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Notes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="notes">
+<h1>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="auxiliary-variables">
+<h2>Auxiliary variables<a class="headerlink" href="#auxiliary-variables" title="Permalink to this headline">¶</a></h2>
+<p>The information provided in this section are useful to set up the
+template file and the <em>Python</em> script useful to run the <code class="docutils literal notranslate"><span class="pre">s2Dcd</span></code>
+using auxiliary variables.</p>
+<div class="section" id="implementation-in-deesse">
+<h3>Implementation in DeeSse<a class="headerlink" href="#implementation-in-deesse" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This option might work properly, but it is in a early stage
+development.</p>
+</div>
+<p>The use of auxiliary variables with the <cite>DeeSse</cite>
+MPS engine could be implemented in a number of ways. Here the
+following strategy is selected:</p>
+<ol class="arabic simple">
+<li><p>The 2D slices (primary and auxiliary variable) are provided in the
+<em>same</em> <cite>GSLIB</cite> file using the variable name provided in the
+<code class="docutils literal notranslate"><span class="pre">template.in</span></code>
+file. In other words, only one TI is defined in the section <code class="docutils literal notranslate"><span class="pre">TRAINING</span>
+<span class="pre">IMAGE</span></code>.</p></li>
+<li><p>The intermediate output files are provided as a unique file
+too. Therefore, in the section <code class="docutils literal notranslate"><span class="pre">OUTPUT</span> <span class="pre">SETTINGS</span> <span class="pre">FOR</span> <span class="pre">SIMULATION</span></code>
+in the <code class="docutils literal notranslate"><span class="pre">template.in</span></code> file the keyword
+<code class="docutils literal notranslate"><span class="pre">OUTPUT_SIM_ALL_IN_ONE_FILE</span></code> should be used.</p></li>
+</ol>
+</div>
+<div class="section" id="implementation-in-impala">
+<h3>Implementation in Impala<a class="headerlink" href="#implementation-in-impala" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This MPS engine is not supported any more
+since 2017. This section is left just as a reference for
+further developments, potentially oriented towards other
+MPS simulation engines.</p>
+</div>
+<p>There are two main modes that can be implemented to use auxiliary variables:</p>
+<dl class="simple">
+<dt>Full 3D mode</dt><dd><p>In this mode a full 3D auxliary variable map must be
+provided. Then the <cite>s2Dcd</cite> automatically slices it along the
+current simulated section to extract a 2D auxiliary variable
+map. This set up is useful when it is relatively easy to find a
+full 3D map for the auxiliary variable.</p>
+</dd>
+<dt>2D mode</dt><dd><p>This should be the default mode, when you use the 2D maps of
+auxiliary variables attached to the 2D TIs provided for the
+simulation.</p>
+</dd>
+</dl>
+<p>The <cite>Full 3D mode</cite> can be enabled by setting the
+<code class="docutils literal notranslate"><span class="pre">geostats.s2Dcd.AUX_VAR_FULL3D</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Otherwise,
+the default value for the <cite>2D mode</cite> is used.</p>
+<p>For the <code class="docutils literal notranslate"><span class="pre">Impala</span></code> MPS simulation engine the implementation of usage
+of the auxiliary variable is quite univoque and follows a quite
+standard workflow.  Simply, the user have to provide (in addition to
+the 2D TIs of the main variable):</p>
+<ul class="simple">
+<li><p>a 2D auxiliary variable map (<cite>VTK</cite> files) with the same size of
+the provided 2D TIs, one for each TI.</p></li>
+<li><p>a 3D auxiliary variable map with the same size of the 3D simulation
+grid.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>The format of the variable in the <em>VTK</em> files contaning the
+auxiliary variables should be <code class="docutils literal notranslate"><span class="pre">float</span></code>.</p></li>
+<li><p>During the simulation process many <em>VTK</em> files containing
+sections of the 3D auxiliary variable map will be created. This
+is somehow redundant and in the future should be removed. For
+the moment you have to manually remove manually these files.</p></li>
+<li><p>Very often the information contained in the 3D auxiliary
+variable sections is not very different from the 2D auxiliary
+variable corresponding to the 2D TI. Some computation time
+could be saved in these cases, but for the moment a complete 3D
+auxliary variable map is required to provide more flexibility.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="licence-issues">
+<h2>Licence Issues<a class="headerlink" href="#licence-issues" title="Permalink to this headline">¶</a></h2>
+<p>The recent versions of the DS codes are running with a licence
+manager. Therefore, it is possible that running the code will give an
+error code. At the moment the quick and dirty solution is to wait for
+some time and retry to run again the simulation of the same
+section. You can tune this in the module <code class="docutils literal notranslate"><span class="pre">deesse.py</span></code>, changing the
+values of the variables <code class="docutils literal notranslate"><span class="pre">NB_LIC_WAIT</span></code> (number of attempts to contact
+the lincese server) and <code class="docutils literal notranslate"><span class="pre">LIC_WAIT_TIME</span></code> (pause from one attempt to the
+other).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Note that the computing time can be heavily affected by
+this problem!</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="publications.html" class="btn btn-neutral float-right" title="Publications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Alessandro Comunian
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

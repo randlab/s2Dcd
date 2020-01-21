@@ -1,0 +1,549 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Examples &mdash; s2Dcd 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Notes" href="notes.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> s2Dcd
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="purpose.html">Code purpose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-run-the-examples">How to run the examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ms-windows">MS Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linux">Linux</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#commented-example">Commented example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples-with-deesse">Examples with <cite>DeeSse</cite></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-1-strebelle-s-ti-along-two-directions">Example 1: Strebelle’s TI along two directions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-2-conditioning-data">Example 2: Conditioning data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-3-multiple-realizations">Example 3: Multiple realizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-4-changing-the-simulation-parameters">Example 4: Changing the simulation parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notes.html">Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendices.html">Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">s2Dcd</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>Some usage examples of the <code class="docutils literal notranslate"><span class="pre">s2Dcd</span></code> module, including a <cite>commented</cite>
+example.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Some of the examples contained in the provided directory
+are very work in progress. If the directory related to an
+example contains a file <code class="docutils literal notranslate"><span class="pre">README.txt</span></code> where it is
+clearly stated that the example is <strong>work in progress</strong>,
+do not trust too much the corresponding example.</p>
+</div>
+<div class="section" id="how-to-run-the-examples">
+<h2>How to run the examples<a class="headerlink" href="#how-to-run-the-examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ms-windows">
+<h3>MS Windows<a class="headerlink" href="#ms-windows" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Here we suppose that you are using the default GUI interface
+(‘IDLE’) provided with Python. However, if you installed
+Python using <cite>Anaconda</cite>, there is a nicer user friendly GUI
+named <cite>spyderlib</cite> that you can use instead.</p>
+</div>
+<p>If you have installed <cite>Python</cite>, then you should have also the Python
+<cite>IDLE</cite> (a GUI interface). From the interface you can open one of the
+files in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory, and from the menu of the <cite>IDLE</cite>
+select <cite>run</cite>. Another window should open and show you the advancement
+of the simulation.</p>
+<p>Alternatively, you can use the <cite>Command Prompt</cite>, like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="n">toto</span>\<span class="n">examples</span>\<span class="mi">01</span><span class="n">_Strebelle</span><span class="o">&gt;</span> <span class="n">python</span><span class="o">.</span><span class="n">exe</span>  <span class="n">s2Dcd_run</span><span class="o">-</span><span class="n">ex01</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are using <cite>spyderlib</cite> to run
+your scripts (and you don’t have any Python installation
+other than the one that comes with the <cite>Anaconda</cite>), it
+can be useful, once you set the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment
+variable from the <cite>spyderlib</cite> menu (inside the <cite>Python Path
+Manager</cite> menu), to push the button <cite>synchronize…</cite> (and
+accept with <cite>Yes</cite>). This should allow you to use <cite>s2Dcd</cite> also
+with an external python shell. Then, to run the <cite>s2Dcd</cite>, go
+to <cite>Run &gt; Configuration per file…</cite> and select <cite>Execute in an
+external system terminal</cite>, and tick <cite>Interact with the python
+console after execution</cite>. Then you should able to run the
+<cite>s2Dcd</cite> with these option without seeing plenty of
+command-prompt windows popping up…
+Note that you will probably need to restart the Python kernel.</p>
+</div>
+</div>
+<div class="section" id="linux">
+<h3>Linux<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h3>
+<p>In the directory of the each example, you can simply:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>username@machine$ ./s2Dcd_run-ex01.py
+</pre></div>
+</div>
+<p>You might need to provide the execution rights to your user
+(for example <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">+x</span> <span class="pre">s2Dcd_run-ex01.py</span></code> ).</p>
+<p>If you want, you can redirect the output to some file and submit the process
+in background:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>username@machine$ ./s2Dcd_run-ex01.py &gt; somefile.out &amp;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="commented-example">
+<h2>Commented example<a class="headerlink" href="#commented-example" title="Permalink to this headline">¶</a></h2>
+<p>This is a commented version of the file <code class="docutils literal notranslate"><span class="pre">s2Dcd_run-ex02.py</span></code> that you
+can find in the <code class="docutils literal notranslate"><span class="pre">..\examples\02_Strebelle-conditional</span></code>
+directory.  It runs a simulation using two training images and some
+conditioning data, both in the form of data points and in the form of
+a conditioning slice.  The example presents the use of the <cite>DeeSse</cite>
+MPS simulation engine, but the principles to run a simulation with a
+different MPS simulation engine (i.e. <cite>Impala</cite>) are similar.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In python, all the text enclosed by <code class="docutils literal notranslate"><span class="pre">'''</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;&quot;&quot;</span></code> and the lines
+starting with <code class="docutils literal notranslate"><span class="pre">#</span></code> are comments.</p>
+</div>
+<p>In the first row we define the python interpreter… this is a
+standard command that can be included in each python script:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+</pre></div>
+</div>
+<p>Import some <em>standard</em> python modules:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+</pre></div>
+</div>
+<p>Import the modules which are part of the <cite>s2Dcd</cite> software, that is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">s2Dcd.s2Dcd</span> <span class="k">as</span> <span class="nn">s2Dcd</span>
+</pre></div>
+</div>
+<p>a module that contains all the interface for the <cite>DeeSse</cite> MPS
+simulation engine:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">s2Dcd.deesse</span> <span class="k">as</span> <span class="nn">mpds_interface</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to use a different MPS engine <cite>Impala</cite>, you need to create your own module for this.</p>
+</div>
+<p>a simple module containing some utilities:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">s2Dcd.utili</span> <span class="k">as</span> <span class="nn">utili</span>
+</pre></div>
+</div>
+<p>a module to read and write output in the GSLIB format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">s2Dcd.gslibnumpy</span> <span class="k">as</span> <span class="nn">gslibnumpy</span>
+</pre></div>
+</div>
+<p>If you can use a multi-thread version of <cite>DeeSse</cite>, you can define here
+the number of threads:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s2Dcd</span><span class="o">.</span><span class="n">nb_threads</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>if you don’t specify a value for this variable, the default value of 1
+is used.</p>
+<p>Then, the following line is used to print out some information about
+the run and record the start time:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">time_start</span> <span class="o">=</span> <span class="n">utili</span><span class="o">.</span><span class="n">print_start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A random seed can be set with the following command, in order to allow
+to get repeatable results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">456833</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then you have to load the default definition for the parameters for
+the <cite>DeeSse</cite> simulation. In our case, we set all the parameters in a
+template file with in mind the resulting 3D simulation. Therefore, the
+grid size and the definition of the search template will be provided
+as we would do a 3D simulation.  Here all the parameters are contained
+in a standard <code class="docutils literal notranslate"><span class="pre">.in</span></code> file for <cite>DeeSse</cite>.  We therefore create a the
+template of parameters (<code class="docutils literal notranslate"><span class="pre">par_template</span></code>) from the file
+<code class="docutils literal notranslate"><span class="pre">template.in</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">template_in</span> <span class="o">=</span> <span class="s2">&quot;template.in&quot;</span>
+<span class="n">par_template</span> <span class="o">=</span> <span class="n">mpds_interface</span><span class="o">.</span><span class="n">Param</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">template_in</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You could also call <code class="docutils literal notranslate"><span class="pre">Param</span></code> without the argument
+<code class="docutils literal notranslate"><span class="pre">file_name</span></code>, and you will get the default parameters defined in
+the <code class="docutils literal notranslate"><span class="pre">mpds_interface</span></code>.</p>
+</div>
+<p>Now we define the parameters which are used for the simulation along
+the <cite>x</cite>, <cite>y</cite> and <cite>z</cite> axes. We always read the default parameters from
+the file defined by the variable <code class="docutils literal notranslate"><span class="pre">template_in</span></code>, but we could
+potentially select a different set of parameters for each direction
+(and each step of the sequence). Here we keep the parameters defined
+in the default <code class="docutils literal notranslate"><span class="pre">template.in</span></code> file. However, we customize them
+defining a different training image for each direction.  The value
+<code class="docutils literal notranslate"><span class="pre">None</span></code> must be specified if we don’t have a TI for the plane normal
+to that simulation direction:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">par_Xnorm</span> <span class="o">=</span> <span class="n">mpds_interface</span><span class="o">.</span><span class="n">Param</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">template_in</span><span class="p">)</span>
+<span class="n">par_Xnorm</span><span class="o">.</span><span class="n">tis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">par_Ynorm</span> <span class="o">=</span> <span class="n">mpds_interface</span><span class="o">.</span><span class="n">Param</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">template_in</span><span class="p">)</span>
+<span class="n">par_Ynorm</span><span class="o">.</span><span class="n">tis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;ti_250x1x250.gslib&quot;</span>
+<span class="n">par_Znorm</span> <span class="o">=</span> <span class="n">mpds_interface</span><span class="o">.</span><span class="n">Param</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">template_in</span><span class="p">)</span>
+<span class="n">par_Znorm</span><span class="o">.</span><span class="n">tis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;ti_250x250x1.gslib&quot;</span>
+</pre></div>
+</div>
+<p>Then you have to specify the maximum number of simulation step.
+You can usually put this value to a number bigger that the expected
+number of slices required to complete your simulation domain. The
+simulation will stop when the simulation domain will be filled.</p>
+<p>However, in some cases when you would like to run only the fist step
+of the simulation, to check is the simulation and the conditioning are
+OK, you can set this value to a smaller integer, for example <code class="docutils literal notranslate"><span class="pre">6</span></code>.
+In this case we select a big value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">step_max</span> <span class="o">=</span> <span class="mi">3000</span>
+</pre></div>
+</div>
+<p>Now we define the simulation grid, which is extracted from the size of
+the grid contained in the file <code class="docutils literal notranslate"><span class="pre">template.in</span></code> and therefore in the
+variable <code class="docutils literal notranslate"><span class="pre">par_template</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">simODS</span> <span class="o">=</span> <span class="n">par_template</span><span class="o">.</span><span class="n">grid</span>
+</pre></div>
+</div>
+<p>the grid is printed to the standard output (for double check),
+together with other information about the simulation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s2Dcd</span><span class="o">.</span><span class="n">print_sim_info</span><span class="p">(</span><span class="n">simODS</span><span class="p">,</span> <span class="n">par_Xnorm</span><span class="p">,</span> <span class="n">par_Ynorm</span><span class="p">,</span> <span class="n">par_Znorm</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, it is required to define a numpy array which will contain the
+results of each step of the simulation. The default values of the
+array are initialized using the variable <code class="docutils literal notranslate"><span class="pre">s2Dcd.no_data</span></code>. The
+simulation will go on until all the <cite>no_data</cite> values will be simulated
+(or until the maximum simulation step <code class="docutils literal notranslate"><span class="pre">step_max</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hard_data</span> <span class="o">=</span> <span class="n">s2Dcd</span><span class="o">.</span><span class="n">no_data</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">simODS</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span> <span class="n">simODS</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span> <span class="n">simODS</span><span class="o">.</span><span class="n">nz</span><span class="p">),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The default value for the variable <code class="docutils literal notranslate"><span class="pre">s2Dcd.no_data</span></code> is -1.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can redefine the value of the variable <code class="docutils literal notranslate"><span class="pre">s2Dcd.no_data</span></code> to
+suit different conversions for the no data values.
+In this example we consider the default value -1, therefore a
+definition is not required.
+If you want to change the no data value you can do something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s2Dcd</span><span class="o">.</span><span class="n">no_data</span> <span class="o">=</span> <span class="o">-</span><span class="mi">999999</span>
+</pre></div>
+</div>
+</div>
+<p>The conditioning data, if available, can be loaded in the GSLIB point
+data format using the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s2Dcd</span><span class="o">.</span><span class="n">add_gslib_pointdata</span><span class="p">([</span><span class="s2">&quot;data_points.gslib&quot;</span><span class="p">],</span> <span class="n">hard_data</span><span class="p">,</span> <span class="n">simODS</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have many files containing conditioning data in the
+GSLIB point data format, then you can add them at the same time
+like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s2Dcd</span><span class="o">.</span><span class="n">add_gslib_pointdata</span><span class="p">([</span><span class="s2">&quot;file1.gslib&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file2.gslib&quot;</span><span class="p">,</span><span class="s2">&quot;file3.gslib&quot;</span><span class="p">],</span> <span class="n">hard_data</span><span class="p">,</span> <span class="n">simODS</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>With this command the data points contained in the file
+<code class="docutils literal notranslate"><span class="pre">data_points.gslib</span></code> will be added to the numpy array that contains
+all the results. They will also be extracted at each simulation step
+if they are located in the simulated section.  You can also add
+conditioning data in a structured grid format, for example if you have
+access to an outcrop or some data saved as a GSLIB “image”.  With the
+following command, we load the file <code class="docutils literal notranslate"><span class="pre">ti_250x1x250.gslib</span></code> and we
+associate its values to the section with <cite>index</cite> 4 along the <cite>y</cite>
+coordinate (the exact location depends in the definition of your
+grid…):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hd_section</span> <span class="o">=</span> <span class="n">gslibnumpy</span><span class="o">.</span><span class="n">gslib2numpy</span><span class="p">(</span><span class="s2">&quot;ti_250x1x250.gslib&quot;</span><span class="p">)</span>
+<span class="n">hard_data</span><span class="p">[:,</span><span class="mi">4</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">hd_section</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">simODS</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="n">simODS</span><span class="o">.</span><span class="n">nz</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now we can create the simulation sequence. Basically, we alternatively
+simulate along the directions defined by the parameters defined by
+<code class="docutils literal notranslate"><span class="pre">par_Xnorm</span></code>, <code class="docutils literal notranslate"><span class="pre">par_Ynorm</span></code>, and <code class="docutils literal notranslate"><span class="pre">par_Znorm</span></code> only when a training
+image file is present. In this case we didn’t provided a value for the
+TI file for the sections perpendicular to the plane <cite>yz</cite> (that is the
+parameters contained in <code class="docutils literal notranslate"><span class="pre">par_Xnorm</span></code>). Moreover, for a given
+direction we always use the same parameters along the duration of the
+simulation sequence. Therefore, to initialize the simulation sequence
+we only need:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seq</span> <span class="o">=</span> <span class="n">s2Dcd</span><span class="o">.</span><span class="n">create_seq</span><span class="p">(</span><span class="n">simODS</span><span class="p">,</span> <span class="n">par_Xnorm</span><span class="p">,</span> <span class="n">par_Ynorm</span><span class="p">,</span> <span class="n">par_Znorm</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then comes the true simulation step, which uses the information
+collected in the previous ones:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s2Dcd</span><span class="o">.</span><span class="n">sim_run</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">step_max</span><span class="p">,</span> <span class="n">hard_data</span><span class="p">,</span> <span class="n">simODS</span><span class="p">,</span> <span class="n">par_template</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And finally, compute the running time (approximated!) and print <cite>STOP</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">utili</span><span class="o">.</span><span class="n">print_stop</span><span class="p">(</span><span class="n">time_start</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples-with-deesse">
+<h2>Examples with <cite>DeeSse</cite><a class="headerlink" href="#examples-with-deesse" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-1-strebelle-s-ti-along-two-directions">
+<h3>Example 1: Strebelle’s TI along two directions<a class="headerlink" href="#example-1-strebelle-s-ti-along-two-directions" title="Permalink to this headline">¶</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">file name</dt>
+<dd class="field-odd"><p><cite>s2Dcd_run-ex01.py</cite></p>
+</dd>
+<dt class="field-even">directory</dt>
+<dd class="field-even"><p><cite>/examples/deesse/01_Strebelle</cite>.</p>
+</dd>
+</dl>
+<p>In this example, the <cite>s2Dcd</cite> method is applied to the celebrated
+Strebelle’s 2D training image to obtain a 3D simulation.
+Here we use the same training images along the directions normal to the axis
+<em>z</em> and <em>y</em>.</p>
+<p>No conditioning data are considered.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Another possibility could be, for example, to use the two TI normal to
+axis <em>x</em> and <em>y</em>. In this case the hypothesis about the 3D geometry are</p>
+</div>
+</div>
+<div class="section" id="example-2-conditioning-data">
+<h3>Example 2: Conditioning data<a class="headerlink" href="#example-2-conditioning-data" title="Permalink to this headline">¶</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">file name</dt>
+<dd class="field-odd"><p><cite>s2Dcd_run-ex02.py</cite></p>
+</dd>
+<dt class="field-even">directory</dt>
+<dd class="field-even"><p><cite>/examples/02_Strebelle-conditional</cite>.</p>
+</dd>
+</dl>
+<p>Same as <cite>Example 1</cite>, but with conditioning points.</p>
+</div>
+<div class="section" id="example-3-multiple-realizations">
+<h3>Example 3: Multiple realizations<a class="headerlink" href="#example-3-multiple-realizations" title="Permalink to this headline">¶</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">file name</dt>
+<dd class="field-odd"><p><cite>s2Dcd_run-ex03.py</cite></p>
+</dd>
+<dt class="field-even">directory</dt>
+<dd class="field-even"><p><cite>/examples/03_Strebelle-many-realizations</cite>.</p>
+</dd>
+</dl>
+<p>In this example, the same simulation framework of <cite>Example 1</cite> is applied
+many times in order to obtain different simulations with different
+random seeds.</p>
+</div>
+<div class="section" id="example-4-changing-the-simulation-parameters">
+<h3>Example 4: Changing the simulation parameters<a class="headerlink" href="#example-4-changing-the-simulation-parameters" title="Permalink to this headline">¶</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">file name</dt>
+<dd class="field-odd"><p><cite>s2Dcd_run-ex01.py</cite></p>
+</dd>
+<dt class="field-even">directory</dt>
+<dd class="field-even"><p><cite>/examples/04_Strebelle-many-param</cite>.</p>
+</dd>
+</dl>
+<p>The modules related to the <cite>s2Dcd</cite> can be used also for other
+purposes, like for example to play with the parameters to be used
+for a MPS simulation in an automated way.
+You can for example use the modules to run different simulations
+changing automatically the size of the data template.
+Here we demonstrate this using the Strebelle’s training image.</p>
+<p>No conditioning data are considered.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="notes.html" class="btn btn-neutral float-right" title="Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Alessandro Comunian
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
