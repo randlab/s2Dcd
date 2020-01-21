@@ -29,7 +29,7 @@ See the directory `docs` and the following links for more details about:
 * `Usage examples <https://github.com/randlab/s2Dcd/blob/master/docs/examples.rst>`_
 
 and more.
-The complete documentation is also available as a PDF file `here <https://github.com/randlab/s2Dcd/blob/master/docs/_build/latex/s2dcd.pdf>`.
+The complete documentation is also available as a PDF file `here <https://github.com/randlab/s2Dcd/blob/master/docs/_build/latex/s2dcd.pdf>`_.
 
 
 
