@@ -22,13 +22,14 @@ Then inside the dowloaded directory::
 For more details...
 ********************************
 
-See the directory `docs` for more details about:
+See the directory `docs` and the following links for more details about:
 
 * `s2Dcd purpose <https://github.com/randlab/s2Dcd/blob/master/docs/purpose.rst>`_
-* installation
-* example
+* `installation <https://github.com/randlab/s2Dcd/blob/master/docs/installation.rst>`_
+* `Usage examples <https://github.com/randlab/s2Dcd/blob/master/docs/examples.rst>`_
 
 and more.
+The complete documentation is also available as a PDF file `here <https://github.com/randlab/s2Dcd/blob/master/docs/_build/latex/s2dcd.pdf>`.
 
 
 
