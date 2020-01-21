@@ -24,7 +24,7 @@ For more details...
 
 See the directory `docs` for more details about:
 
-* documentation
+* `s2Dcd purpose <https://github.com/randlab/s2Dcd/blob/master/docs/purpose.rst>`_
 * installation
 * example
 
