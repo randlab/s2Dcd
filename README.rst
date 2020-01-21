@@ -7,8 +7,8 @@ to obtain 3D multiple-point statistics (MPS) simulations by using only 2D traini
 Quick start
 *****************
 
-.. note:: To run the `s2Dcd`, a MPS simulation engine like the `DeeSse
-          <http://www.randlab.org/research/deesse/>`_ is needed!
+**note** To run the `s2Dcd`, a MPS simulation engine like the `DeeSse
+<http://www.randlab.org/research/deesse/>`_ is needed!
 
 Clone or download the `s2Dcd` package on a local directory.
 Then inside the dowloaded directory::
