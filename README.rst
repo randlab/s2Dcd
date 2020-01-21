@@ -2,7 +2,11 @@ README
 ==============
 
 This is the README file of the `s2Dcd`, a Python package that allows
-to obtain 3D multiple-point statistics (MPS) simulations by using only 2D training images (TIs).
+to obtain 3D multiple-point statistics (MPS) simulations by using only
+2D training images (TIs).  More detais about the methodology can be
+found in the paper by *Comunian, Renard and Straubhaar*, DOI:
+`10.1016/j.cageo.2011.07.009
+<http://dx.doi.org/10.1016/j.cageo.2011.07.009>`_.
 
 Quick start
 *****************
