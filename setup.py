@@ -16,7 +16,7 @@ setuptools.setup(
 #    package_dir={"", "s2Dcd"},
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GNU GPL License",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',

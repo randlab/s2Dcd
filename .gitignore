@@ -1,3 +1,6 @@
 *~
 curr_sim*
 s2Dcd/__pycache__*
+build
+dist
+s2Dcd.egg-info
