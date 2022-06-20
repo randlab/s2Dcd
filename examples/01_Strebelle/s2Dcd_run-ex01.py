@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+
 '''
-Example 1: Strebelle's TI along two directions
+Example1: Strebelle's TI along two directions
 *************************************************************************
 
-:file name: `s2Dcd_run-ex01.py`
+:file name: `s2Dcd_run-ex01_geone.py`
 
 :directory: `/examples/deesse/01_Strebelle`.
 
@@ -24,60 +25,85 @@ No conditioning data are considered.
 # Import "standard" modules
 import os
 import numpy as np
+import geone as gn
+import json
+import copy
 
 # Import non-standard modules
 import s2Dcd.s2Dcd as s2Dcd
-import s2Dcd.deesse as mpds_interface
 import s2Dcd.utili  as utili
-
-# If you can use a parallel version of the MPS simulation core,
-# define here the number of threads.
-s2Dcd.nb_threads = 2
 
 # Print header and start counting time
 time_start = utili.print_start() 
 
-# The random seed, useful to get repeatable results
-seed = np.random.RandomState(456833)
+# If you can use a parallel version of the MPS simulation core,
+# define here the number of threads.
+nthreads = 8
 
-# Load the default simulation parameters from a template file
-template_in = "template.in"
-par_template = mpds_interface.Param(file_name=template_in)
+# Defalut information that 
+ti3Dini_file = "ti3Dini.json"
 
-# Create with the same files some templates for the diffent directions.
-# If there is no TI along a given direction, use the keyword "None".
-par_Xnorm = mpds_interface.Param(file_name=template_in)
-par_Xnorm.tis[0].file_name = None
-par_Ynorm = mpds_interface.Param(file_name=template_in)
-par_Ynorm.tis[0].file_name = os.path.join("..","data",
-                                          "strebelle", "ti_250x1x250.gslib")
-par_Znorm = mpds_interface.Param(file_name=template_in)
-par_Znorm.tis[0].file_name = os.path.join("..","data", "strebelle", 
-                                          "ti_250x250x1.gslib")
+# Read an external file containing the dimensions of the output grid.
+with open(ti3Dini_file, "r") as json_in:
+    ti3Dini = json.load(json_in)
+# The initial content is NaN
+ti3Dini["val"] = np.full([ti3Dini["nx"], ti3Dini["ny"], ti3Dini["nz"]], np.nan)
 
-# The max number of simulation steps to be performed. You can use it if you
-# want to stop the simulation before the 3D domain is completed.
-step_max = 100000
+# Use the parameters to create an empty 3D TI
+res3D = gn.img.Img(**ti3Dini)
 
-# Instantiate an object that contains the dimensions of the simulation grid
-simODS = par_template.grid
+# Create a dictionary containing the parameters that will be used to set up
+# the default input parameters of the DeeSse
+ds3Din_file = "ds3Din.json"
+with open(ds3Din_file, "r") as json_in:
+    ds3Din_dict = json.load(json_in)
+ds3Din_dict["TI"] = res3D
 
-s2Dcd.print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm)
+# Set up the general parameters to be used for the target 3D final result
+ds3Din = gn.deesseinterface.DeesseInput(**ds3Din_dict)
 
-# Array to store hard data and the result of the simulations. By
-# default, the cells that don't contain a simulated (or a default
-# conditioning data) are set to the value of the variable
-# `s2Dcd.no_data`.
-hard_data = s2Dcd.no_data*np.ones(
-    (simODS.nx, simODS.ny, simODS.nz), 'float')
+# Set up the main parameters for the simulation normal to axis *x*, starting
+# from the 3D template
+dsXin = None
+
+# Set up the main parameters for the simulation normal to axis *y*, starting
+# from the 3D template
+dsYin = copy.deepcopy(ds3Din)
+dsYin.ny = 1
+
+# Read the training image normal to the *y* axis
+tiY = gn.img.readImageGslib(os.path.join("..","data","strebelle", 
+                                           "ti_250x1x250.gslib"))
+dsYin.TI = tiY
+
+# Set up the main parameters for the simulation normal to axis *z*, starting
+# from the 3D template
+dsZin = copy.deepcopy(ds3Din)
+dsZin.nz = 1
+# Read the training image normal to the *z* axis
+tiZ = gn.img.readImageGslib(os.path.join("..","data","strebelle", 
+                                           "ti_250x250x1.gslib"))
+dsZin.TI = tiZ
+
+# The max number of simulation steps to be performed. You can use it
+# if you want to stop the simulation before the 3D domain is
+# completed.
+step_max = 300000
+
+# Print some simulation info
+s2Dcd.print_sim_info(ds3Din, dsXin, dsYin, dsZin, nthreads)
 
 # Create the simulation sequence
-seq = s2Dcd.create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm)
-    
+seq = s2Dcd.create_seq(ds3Din, dsXin, dsYin, dsZin, nthreads)
+
 #
 # Simulation
 #
-s2Dcd.sim_run(seq, step_max, hard_data, simODS, par_template, seed)
+s2Dcd.sim_run(seq, step_max, res3D, ds3Din, nthreads)
 
 # Stop counting time
 utili.print_stop(time_start)
+
+gn.imgplot3d.drawImage3D_surface(res3D, text='TI', scalar_bar_kwargs={'vertical':True})
+
+gn.img.writeImageVtk(res3D, "res3D.vtk", missing_value=-9999999)

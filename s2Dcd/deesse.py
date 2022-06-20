@@ -71,7 +71,7 @@ import s2Dcd.grid as grid
 import s2Dcd.utili as utili
 import json
 import os
-
+import geone as gn
 
 # #########################################################################
 # Some default values for some parameters
@@ -149,112 +149,114 @@ json_in_text = json.load(
     open(os.path.join(moddir, "deesse_file_in_text.json")))
 
 
-class VarInfo(object):
-    '''
-    A class to support the class ParamMPDS. It tries to regroup all
-    the information about a variable which have to be simulated.
-    '''
-    def __init__(self, name=NAME, out_flag=True, fmt=FMT,
-                 search_r_x=SEARCH_R_X,
-                 search_r_y=SEARCH_R_Y,
-                 search_r_z=SEARCH_R_Z,
-                 search_anis_x=SEARCH_ANIS_X,
-                 search_anis_y=SEARCH_ANIS_Y,
-                 search_anis_z=SEARCH_ANIS_Z,
-                 search_ang_az=SEARCH_ANG_AZ,
-                 search_ang_dp=SEARCH_ANG_DP,
-                 search_ang_pl=SEARCH_ANG_PL,
-                 search_pow=SEARCH_POW,
-                 max_nb_neigh=MAX_NB_NEIGH,
-                 max_dens_neigh=MAX_DENS_NEIGH,
-                 rel_dist_flag=REL_DIST_FLAG,
-                 dist_type=DIST_TYPE,
-                 weight=WEIGHT,
-                 dist_thre=DIST_THRE,
-                 prob_constr=0,
-                 block_data=0
-                 ):
-        '''
-        Parameters:
-            name: string, optional
-                Name of the variable
-            prob_constr: int, optional
-                This is used for the probability constrains.
-                For the moment this is not implemented in the code, and
-                therefore only a default value of 0 is allowed
-            block_data: int, optional
-                This is required for the usage of block data. For the moment
-                only the default value of 0 is allowed.
-            out_flag: bool, optional
-                A flag to determine if the variable
-            ...
+# class VarInfo(object):
+#     '''
+#     A class to support the class ParamMPDS. It tries to regroup all
+#     the information about a variable which have to be simulated.
+    
+#     .. note: THIS SHOULD NOT BE REQUIRED ANYMORE WITH GEONE
+#     '''
+#     def __init__(self, name=NAME, out_flag=True, fmt=FMT,
+#                  search_r_x=SEARCH_R_X,
+#                  search_r_y=SEARCH_R_Y,
+#                  search_r_z=SEARCH_R_Z,
+#                  search_anis_x=SEARCH_ANIS_X,
+#                  search_anis_y=SEARCH_ANIS_Y,
+#                  search_anis_z=SEARCH_ANIS_Z,
+#                  search_ang_az=SEARCH_ANG_AZ,
+#                  search_ang_dp=SEARCH_ANG_DP,
+#                  search_ang_pl=SEARCH_ANG_PL,
+#                  search_pow=SEARCH_POW,
+#                  max_nb_neigh=MAX_NB_NEIGH,
+#                  max_dens_neigh=MAX_DENS_NEIGH,
+#                  rel_dist_flag=REL_DIST_FLAG,
+#                  dist_type=DIST_TYPE,
+#                  weight=WEIGHT,
+#                  dist_thre=DIST_THRE,
+#                  prob_constr=0,
+#                  block_data=0
+#                  ):
+#         '''
+#         Parameters:
+#             name: string, optional
+#                 Name of the variable
+#             prob_constr: int, optional
+#                 This is used for the probability constrains.
+#                 For the moment this is not implemented in the code, and
+#                 therefore only a default value of 0 is allowed
+#             block_data: int, optional
+#                 This is required for the usage of block data. For the moment
+#                 only the default value of 0 is allowed.
+#             out_flag: bool, optional
+#                 A flag to determine if the variable
+#             ...
 
-        .. note:
-            See the MPDS documentation for more details.
-        '''
+#         .. note:
+#             See the MPDS documentation for more details.
+#         '''
 
-        self.name = name
-        self.out_flag = out_flag
-        self.fmt = fmt
-        self.search_r_x = search_r_x
-        self.search_r_y = search_r_y
-        self.search_r_z = search_r_z
-        self.search_anis_x = search_anis_x
-        self.search_anis_y = search_anis_y
-        self.search_anis_z = search_anis_z
-        self.search_ang_az = search_ang_az
-        self.search_ang_dp = search_ang_dp
-        self.search_ang_pl = search_ang_pl
-        self.search_pow = search_pow
-        self.max_nb_neigh = max_nb_neigh
-        self.max_dens_neigh = max_dens_neigh
-        self.rel_dist_flag = rel_dist_flag
-        self.dist_type = dist_type
-        self.weight = weight
-        self.dist_thre = dist_thre
-        self.prob_constr = prob_constr
-        self.block_data = block_data
-    pass
-
-
-class TiInfo(object):
-    '''
-    A class to support the class ParamMPDS. Contains all the information
-    related to one training image.
-
-    Main attributes:
-        file_name: string
-            Name of the file containing the training image
-        max_scan: float
-            Fraction of the TI to scan
-
-    '''
-
-    def __init__(self, file_name=FILE_NAME, max_scan=MAX_SCAN):
-        """
-        Parameters
-            file_name: string
-                Name of the file containing the training image
-            max_scan: float
-                Fraction of the TI to scan
-        """
-        self.file_name = file_name
-        self.max_scan = max_scan
-
-    pass
-
-    def __str__(self):
-        """
-        Print a TiInfo object
-        """
-        out = ("*** TiInfo object ***\n"
-               "    file_name: {0.file_name}\n"
-               "    max_scan:  {0.max_scan}\n".format(
-                self))
-        return out
+#         self.name = name
+#         self.out_flag = out_flag
+#         self.fmt = fmt
+#         self.search_r_x = search_r_x
+#         self.search_r_y = search_r_y
+#         self.search_r_z = search_r_z
+#         self.search_anis_x = search_anis_x
+#         self.search_anis_y = search_anis_y
+#         self.search_anis_z = search_anis_z
+#         self.search_ang_az = search_ang_az
+#         self.search_ang_dp = search_ang_dp
+#         self.search_ang_pl = search_ang_pl
+#         self.search_pow = search_pow
+#         self.max_nb_neigh = max_nb_neigh
+#         self.max_dens_neigh = max_dens_neigh
+#         self.rel_dist_flag = rel_dist_flag
+#         self.dist_type = dist_type
+#         self.weight = weight
+#         self.dist_thre = dist_thre
+#         self.prob_constr = prob_constr
+#         self.block_data = block_data
+#     pass
 
 
-class Param(object):
+# class TiInfo(object):
+#     '''
+#     A class to support the class ParamMPDS. Contains all the information
+#     related to one training image.
+
+#     Main attributes:
+#         file_name: string
+#             Name of the file containing the training image
+#         max_scan: float
+#             Fraction of the TI to scan
+
+#     '''
+
+#     def __init__(self, file_name=FILE_NAME, max_scan=MAX_SCAN):
+#         """
+#         Parameters
+#             file_name: string
+#                 Name of the file containing the training image
+#             max_scan: float
+#                 Fraction of the TI to scan
+#         """
+#         self.file_name = file_name
+#         self.max_scan = max_scan
+
+#     pass
+
+#     def __str__(self):
+#         """
+#         Print a TiInfo object
+#         """
+#         out = ("*** TiInfo object ***\n"
+#                "    file_name: {0.file_name}\n"
+#                "    max_scan:  {0.max_scan}\n".format(
+#                 self))
+#         return out
+
+
+class Param(gn.deesseinterface.DeesseInput):
     '''
     A class containing all the parameters contained in the parameters file.
     '''

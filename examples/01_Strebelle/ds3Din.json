@@ -1,0 +1,21 @@
+{ 
+ "nx" : 52,
+ "ny" : 71,
+ "nz" : 64,
+ "sx" : 1.0,
+ "sy" : 1.0,
+ "sz" : 1.0,
+ "ox" : 0.0,
+ "oy" : 0.0,
+ "oz" : 0.0,
+ "nv" : 1,
+ "varname" : "facies",
+ "nTI" : 1,
+ "distanceType" : "categorical",
+ "nneighboringNode" : 24,
+ "distanceThreshold" : 0.05,
+ "maxScanFraction" : 0.25,
+ "npostProcessingPathMax" : 1,
+ "seed" : 444,
+ "nrealization" : 1
+}

@@ -24,6 +24,8 @@
     ``s2Dcd.py``
 
 :Version:
+    1.0 , 2022-04-14 :
+        * Adapted to the new version of the DeeSse using the geone interface.
     0.9.9 , 2018-01-23 :
         * Solved one bug that prevented simulation perpendicular
           to axis *x*.
@@ -127,9 +129,13 @@ import numpy
 import os
 import copy
 import sys
+import numpy as np
+
+# Import geone
+import geone as gn
 
 # Import "custom" modules
-import s2Dcd.deesse as ds_interface
+# import s2Dcd.deesse as ds_interface REPLACED BY THE GEONE "deesseinterface"
 import s2Dcd.gslibnumpy as gslibnumpy
 import s2Dcd.utili as utili
 import s2Dcd.grid as grid
@@ -316,9 +322,11 @@ class SeqStep(object):
     A class that contains all the information required to create a
     parameters input file for the used MPS engines, that is a *step* of
     the simulation sequence of the approach `s2Dcd`.
+    
+    NOTE: FOR THE MOMENT ONLY THE DEEESSE IS IMPLEMENTED
     """
 
-    def __init__(self, direct, level, param, pseudo3D=0):
+    def __init__(self, direct, level, param=None, nthreads=1):
         '''
         Initialization for the class :py:class:`SeqStep`.  All the
         parameters definitions are considered for a given simulation
@@ -327,59 +335,52 @@ class SeqStep(object):
         Parameters:
             direct: char, 'x', 'y' or 'z'
                 The direction normal to the surface that is simulated.
-            level: int/float
+            level: int
                 The corresponding level of the axis defined by
                 :py:attr:`direct` where we are simulating. It is an
                 integer index in the 3D matrix of the simulation
                 domain.
-
-            param: object of type :py:class:`XXX_interface.Param` or
-                :py:class:`ds_interface.Param`
-                Contains information to create the sequence step.
-            pseudo3D: int
-                The pseudo3D level, only used if >0.
-
+            param: object that contains all the parameters required to 
+                run a simulation step of the sequence depending on the 
+                given simulation engine. For the moment only the 
+                DeeSse is implemented.
+                The "None" value is allowed only for testing purposes.
+                
         Returns:
-            If successful, it create the object. Otherwise, returns -1.
+            If successful, it creates the object. Otherwise, raises some
+            error/warning.
 
-        .. note::
-            * Can consider MPDS simulations with only one TI and one
-              variable at time.
-            * No auxiliary variables for the method MPDS.
         '''
       
         if direct in ['x','y','z']:
             self.direct = direct
         else:
-            # THIS IS NOT THE BEST PYTHONIC WAY TO DO THIS
-            print('    Error, "direct" not in ("x","y","z")')
-            return -1
-
+            raise AttributeError("The value of the attribute *direct* should be in "
+                                 "('x', 'y', 'z'). Wrong entered value is: "
+                                 "{0}".format(direct))
         self.level = level
         self.param = param
-        self.pseudo3D = pseudo3D
+        
+        self.ti = param.TI
+        self.nthreads = nthreads
 
-        # self.ti_file = param.tis[0].file_name
-        # if param.tis[0].aux_var_nb > 0:
-        #     self.aux_var_file = param.tis[0].aux_var_file_name[0]
-        # else:
-        #     self.aux_var_file = None
+        # SEE THE OLDER VERSIONS FOR SUGGESTIONS. THIS COULD BE THE RIGHT
+        # PLACE TO LOOK FOR FILES CONTAINING AUXILIARY VARIABLES OR
+        # WHERE TO SET UP SOME PROPERTIES (FOR EXAMPLE THE DIMENSIONS OF THE
+        # SEARCH NEIGHBORHOOD =0 ALONG THE RIGHT DIRECTION...)
 
-        # The search radius of 0.0 along the right direction is set up in
-        # the function `createSimInFile4MPDS`.
         
     
     def __str__(self):
         """
         Print the content of a sequence step
         """
-        out = ("*** Sequence step info ***\n" +
-               "- level {0.direct} = {0.level:5d}".format(self))
+        out = ("    *** Sequence step info ***\n" +
+                "- level {0.direct} = {0.level:5d}".format(self))
         return out
 
 
-    def simul(self, step, step_max, hard_data, simODS, in_par, seed,
-              rcp_lists):
+    def simul(self, step, step_max, hard_data, simODS, rcp_lists, verbose=0):
         '''
         Run a MPS simulation for a simulation step of a sequence.
 
@@ -400,325 +401,238 @@ class SeqStep(object):
             simODS: object of type :py:class:`Grid`
                 Contains all the info concerning the simulation
                 domain.
-            in_par: string or member of the class :py:class:`Param`.
-                The parameters for creating the *.in* file for the
-                simulations.  In case it is a string: The name of the
-                file containing the template of the input parameters
-                file.  In case it is a `Param` object:
-                All the parameters readed from a template `.in` file
-                required for a MPDS simulation.  seed: instance of the
-                class :py:class:`RandomState` To keep track of the
-                random seed and create simulations that can be
-                reproduced using the same seed.
             rcp_lists: flag
+                NOTE: THIS IS A LEGACY PARAMETER WHICH WAS USEFUL WHEN
+                THE IMPALA MPS ENGINE IS USED.
                 Useful if one wants to re-compute the list at each 
                 simulation step. This parameter has sense only for the
                 `Impala` family of MPS simulation engines.
 
         Returns:
-           * Create some files required for the simulation.
-           * Update the content of the numpy array `hard_data`
-             including new simulated nodes.
+            * Create some files required for the simulation.
+            * Update the content of the :py:class:`geone.img.Img`
+              including new simulated nodes.
              
-           If the selected section is full of hard data, simply
-           returns 1 without creating files and without running the
-           MPS simulation.  If there is an error, returns -1.
+            If the selected section is full of hard data, simply
+            returns 1 without creating files and without running the
+            MPS simulation.  If there is an error, returns -1.
         
         '''
 
         # Check which MPS simulation core is in use
-        # if type(in_par) == impala_interface.Param:
-        #     if nb_threads > 1:
-        #         if type_threads == "MPI":
-        #             mps_core = 'ImpalaMPI'
-        #         else:
-        #             # The default value is OMP
-        #             mps_core = 'ImpalaOMP'
-        #     elif nb_threads == 1:
-        #         mps_core = 'Impala'
-        #     else:
-        #         print("    Error, wrong number of computation"
-        #               " threads (%d)" % \
-        #             ( nb_threads ))
-        #         return -1
-        if type(in_par) == ds_interface.Param:
-            if nb_threads > 1:
-                mps_core = 'MPDSOMP'
-            elif nb_threads == 1:
-                mps_core = 'MPDS'
-            else:
-                print("    Error, wrong number of computation"
-                      " threads (%d)" % \
-                    ( nb_threads ))
-                return -1
+        # THIS COULD BE IMPROVED/OMITTED...
+        intlen = len(str(step_max))
+        if isinstance(simODS, gn.deesseinterface.DeesseInput):
+            # print('    Seq.step {0:{4}d} of {1:{4}d} (max), MPS sim. engine: "{2}" ({3} threads)'.format(
+                # step+1, step_max, "DeeSse", nthreads, intlen), end=" ")
+            print('    Seq.step {0:{2}d} of {1:{2}d} (max)'.format(
+                step+1, step_max, intlen), end=" ")            
         else:
-            print('\n    Error, wrong MPS engine! Stop.\n')
+            print("    WARNING: unknown MPS simulation engine!")
             return -1
-
-        mps_exe = mps_exes[mps_core]
-    
-        in_file_root = IN_FILE_ROOT_SIM # Root name for the files *.in
-        hd_file_root = HD_FILE_ROOT # Root name for the hard data files
-        # Extension for the conditioning data files and results file
-        if mps_core in ['MPDS', 'MPDSOMP'] :
-            in_file_ext = ext.MPDS_IN
-            hd_file_ext = ext.GSLIB
-            result_file = result_file_root + ext.GSLIB
-        elif mps_core in ['Impala', "ImpalaMPI", "ImpalaOMP"]:
-            in_file_ext = ext.IMPALA_IN
-            hd_file_ext = ext.TXT
-            result_file = result_file_root + ext.VTK
-
-
-        print("    Simulation step {0:5d} of {1:5d} (max) ".
-              format(step + 1, step_max), end=' ')
-        # This is the default value, which corresponds to no
-        # conditioning data.  If conditioning data are simulated, then
-        # this value is updated...
-        curr_hd_file = None
-        curr_in_file = (
-            "{0}{1:06d}{2}".format(in_file_root, step, in_file_ext)
-            )
-
+            
     
         # Look if there exists some conditioning data along the
         # current simulation slice
-        print("- slice simulated: {0.direct:s} = {0.level:5d}"
+        print("- slice simulated: {0.direct:s} = {0.level:4d}"
               "".format(self))  
     
+        #   
         # Set up the slice which contains the hard data
+        #
+        # WARNING: 
+        #     1) FOR THE MOMENT THERE IS THE LIMITATION OF USING
+        #        ONLY ONE TI.
+        #        HEREINAFTER THEN THE VALUE "0" SHOULD BE MANAGED ACCORDINGLY
+        #
+        #     2) WHEN ACCESSING THE TI WITH "VAL", THEN BE    
+        curr_hd = copy.deepcopy(hard_data)
+        curr_par = copy.deepcopy(self.param)
         if self.direct == "x":
-            curr_hd = numpy.reshape(hard_data[self.level, :, :],\
-                                        (1,simODS.ny,simODS.nz))
+            # Set the hard data to be used for the simulation
+            curr_hd.nx = 1
+            curr_hd.val = np.reshape(hard_data.val[0,:,:,self.level],
+                                 (1,1,simODS.ny,simODS.nz))
+            # Set the parameters for the simulation
+            # QUI BISOGNERÀ FARE ATTENZIONE SE È IL LIVELLO O LA COORDINATA...
+            # IDEM ANCHE PER LE ALTRE DIREZIONI!
+            curr_par.ox = self.level
+            
         elif self.direct == "y":
-            curr_hd = numpy.reshape(hard_data[:, self.level, :],\
-                                        (simODS.nx,1,simODS.nz))
+            curr_hd.ny = 1
+            curr_hd.val = np.reshape(hard_data.val[0, :, self.level, :], 
+                                 (1,simODS.nx,1,simODS.nz), order="C")
+            # Set the parameters for the simulation
+            curr_par.y = self.level
         elif self.direct == "z":       
-            curr_hd = numpy.reshape(hard_data[:, :, self.level],\
-                                        (simODS.nx,simODS.ny,1))
+            curr_hd.nz = 1
+            curr_hd.val = np.reshape(hard_data.val[0, self.level, :, :],
+                                 (1,simODS.nx,simODS.ny,1))
+            # Set the parameters for the simulation
+            curr_par.z = self.level
+            
+        # gn.imgplot3d.drawImage3D_surface(curr_hd, excluded_value=np.nan, text="s2Dcd", show_edges=True)            
+        # gn.imgplot3d.drawImage3D_slice(curr_hd, slice_normal_y=0,
+        #                                show_bounds=True,   # add bounds (axis with graduation)
+        #                                text='TI')
+        # gn.imgplot3d.drawImage3D_surface(curr_hd, filtering_value=[1], 
+                                         # text='TI')
+        
+        if isinstance(curr_hd, gn.img.Img):
+            curr_par.dataImage = [curr_hd]
+        else:
+            print("ERROR, wrong input type for dataImage")
+        gn.img.writeImageVtk(curr_hd, "s2Dcd_step{0:06d}.vtk".format(step+1), data_type='int')
 
+        if not isinstance(curr_par, gn.deesseinterface.DeesseInput):
+        # LATER ADD A MESSAGE IN THE LOG FILE...
+            print("ERROR, wrong input type for dataImage")
+        
         # Check if in the slice there are hard data.
-        if(numpy.any(curr_hd != no_data)):
-            # The slice contain some hard data
-            if numpy.all( curr_hd != no_data):
-                # There are no unknown data in the slice
-                return 1
-            else:
-                # Some data must be simulated
-                curr_hd_file = (
-                    "{0}{1:06d}{2}".format(hd_file_root, step, hd_file_ext)
-                    )
-
-                if mps_core in ["Impala", "ImpalaOMP", "ImpalaMPI"]:
-                    numpy2hd4Impala(simODS, curr_hd, curr_hd_file, self)
-                elif mps_core in  ["MPDS", "MPDSOMP"]:
-                    xyz_data = numpy2hd4MPDS(simODS, curr_hd, self)
-                    gslibnumpy.numpy2gslib_points(xyz_data, 
-                                                  curr_hd_file, 
-                                                  varname=
-                                                  in_par.vars[0].name)
-                else:
-                    print("    Error, wrong MPS simulation core selected!")
-			
-        # Add the suffix "exe" to the executable if we are running Windows
-        if os.name == 'nt':
-            mps_exe = mps_exe + ext.EXE
+        nb_nan = np.sum(np.isnan(curr_hd.val))
+        if(nb_nan == 0):
+            # No NaN, all the nodes have a valid value, no need to simulate.
+            # The slice contain some NaN values (to be filled)
+            return 1
+        # print(curr_par)
+        # print(curr_par.dataImage)
+        deesse_out = gn.deesseinterface.deesseRun(curr_par, 
+                                                  nthreads=self.nthreads, verbose=verbose)
+        gn.img.writeImageVtk(curr_hd, "s2Dcd_step{0:06d}.vtk".format(step+1),
+                             data_type='int', missing_value=-9999999)
         
-        # Create the "*.in" file used for the current simulation step
-
-        #
-        # Select which parallel/serial version of the MPS engines
-        # should be used
-        #
-        if mps_core == 'Impala':
-            # Create the "*.in" file for the current simulation step
-            create_in_file4Impala(in_par, self, curr_hd_file,
-                                  curr_in_file, seed)
-            # Create the execution string
-            if rcp_lists:
-                # The list is recomputed at each step
-                runSim = ("%s %s %s_ 0 0 1 0 0 0  %s.log > %s.out" %  
-                          (mps_exe, curr_in_file, curr_in_file[:-3],
-                           curr_in_file[:-3], curr_in_file[:-3]))
-            else:
-                runSim = (
-                    "%s %s %s_ 0 0 1 0 1 list_%s 0  %s.log > %s.out" % (
-                        mps_exe, curr_in_file, curr_in_file[:-3],
-                        self.direct , curr_in_file[:-3], curr_in_file[:-3])
-                    )
-#            print(runSim)
-        elif mps_core == 'ImpalaMPI':
-            # Create the "*.in" file for the current simulation step
-            create_in_file4Impala(in_par, self, curr_hd_file,
-                                  curr_in_file, seed)
-            # ADAPT LATER FOR THE CASE OF AUXILIARY VARIABLES
-            # adaptAuxVarFile(self, simODS)
-            # Create the execution string
-            if rcp_lists:
-                runSim = ("mpirun -np %d %s %s %s_ 0 0 1 0 0 0  "
-                          "%s.log > %s.out" %  
-                          (nb_threads, mps_exe, curr_in_file,
-                           curr_in_file[:-3],
-                           curr_in_file[:-3], curr_in_file[:-3]))
-            else:
-                runSim = ("mpirun -np %d %s %s %s_ 0 0 1 0 1 list_%s 0  "
-                          "%s.log > %s.out" %  
-                          (nb_threads, mps_exe, curr_in_file,
-                           curr_in_file[:-3], self.direct , 
-                           curr_in_file[:-3], curr_in_file[:-3]))
-
-        elif mps_core == 'ImpalaOMP':
-            # Create the "*.in" file for the current simulation step
-            create_in_file4Impala(in_par, self, curr_hd_file,
-                                  curr_in_file, seed)
-            # ADAPT LATER FOR THE CASE OF AUXILIARY VARIABLES
-            # adaptAuxVarFile(self, simODS)
-            # Create the execution string
-            if rcp_lists:
-                runSim = ("%s %d  %s %s_ 0 0 1 0 0 0  %s.log "
-                          "> %s.out" %  
-                          (mps_exe, nb_threads,  curr_in_file,
-                           curr_in_file[:-3], 
-                           curr_in_file[:-3], curr_in_file[:-3]))
-            else:
-                runSim = ("%s %d  %s %s_ 0 0 1 0 1 list_%s 0  %s.log "
-                          "> %s.out" %  
-                          (mps_exe, nb_threads,  curr_in_file,
-                           curr_in_file[:-3], self.direct , 
-                           curr_in_file[:-3], curr_in_file[:-3]))
-
-        elif mps_core == "MPDS":
-            # Create the "*.in" file for the current simulation step
-            create_in_file4MPDS(in_par, self, curr_hd_file, curr_in_file,
-                                seed)
-            runSim = "%s %s > %s.out" % (mps_exe, curr_in_file,
-                                         curr_in_file[:-3])
-        elif mps_core == "MPDSOMP":
-            create_in_file4MPDS(in_par, self, curr_hd_file, curr_in_file,
-                                seed)
-            runSim = "%s %d %s > %s.out" % \
-                (mps_exe, nb_threads, curr_in_file, curr_in_file[:-3])
-
+        # print(deesse_out)
         
-        error_code = os.system(runSim)
-        if error_code == ds_interface.LIC_ERR_CODE:
-            for errcd in range(ds_interface.NB_LIC_WAIT):
-                print("    WARNING: Licence problems with the 'deesse'")
-                print("        Waiting {0} sec and retry...".
-                      format(ds_interface.LIC_WAIT_TIME))
-                time.sleep(ds_interface.LIC_WAIT_TIME)
-                error_code = os.system(runSim)
-                if error_code == 0:
-                    print("        OK, licence problem solved!")
-                    break
+        
+        
+#         error_code = os.system(runSim)
+#         if error_code == ds_interface.LIC_ERR_CODE:
+#             for errcd in range(ds_interface.NB_LIC_WAIT):
+#                 print("    WARNING: Licence problems with the 'deesse'")
+#                 print("        Waiting {0} sec and retry...".
+#                       format(ds_interface.LIC_WAIT_TIME))
+#                 time.sleep(ds_interface.LIC_WAIT_TIME)
+#                 error_code = os.system(runSim)
+#                 if error_code == 0:
+#                     print("        OK, licence problem solved!")
+#                     break
             
             
 
-        if(error_code != 0):
-            error_message = "    ERROR: problems in %(mps_exe)s, "\
-                "error_code=%(error_code)d" % locals()
-            sys.exit(error_message)
+#         if(error_code != 0):
+#             error_message = "    ERROR: problems in %(mps_exe)s, "\
+#                 "error_code=%(error_code)d" % locals()
+#             sys.exit(error_message)
         
-        # Read and add the results to the storage hard data matrix
-        if mps_core in ["Impala","ImpalaMPI","ImpalaOMP"]:
-            new_hd_file = (os.path.splitext(curr_in_file)[0] + "_00000" +
-                           ext.VTK)
-            new_hd = vn.vtk2numpy(new_hd_file, verbose=False)
-        elif mps_core in ["MPDS","MPDSOMP"]:
-            new_hd_file = os.path.splitext(curr_in_file)[0] + ext.GSLIB
-            new_hd =  gslibnumpy.gslib2numpy_onevar(new_hd_file,
-                                                    verbose=False)
+#         # Read and add the results to the storage hard data matrix
+#         if mps_core in ["Impala","ImpalaMPI","ImpalaOMP"]:
+#             new_hd_file = (os.path.splitext(curr_in_file)[0] + "_00000" +
+#                            ext.VTK)
+#             new_hd = vn.vtk2numpy(new_hd_file, verbose=False)
+#         elif mps_core in ["MPDS","MPDSOMP"]:
+#             new_hd_file = os.path.splitext(curr_in_file)[0] + ext.GSLIB
+#             new_hd =  gslibnumpy.gslib2numpy_onevar(new_hd_file,
+#                                                     verbose=False)
         
-        # Add the new hard data to the "storage" array
-        add_hd(self, new_hd, hard_data, simODS)
+#         # Add the new hard data to the "storage" array
+#         add_hd(self, new_hd, hard_data, simODS)
+        if self.direct == "x":
+            # print(deesse_out["sim"][0].val.shape)
+            hard_data.val[0,:,:,self.level] = deesse_out["sim"][0].val[0,:,:,0]
+        elif self.direct == "y":            
+            # print(deesse_out["sim"][0].val.shape)
+            hard_data.val[0,:,self.level,:] = deesse_out["sim"][0].val[0,:,0,:]
+        elif self.direct == "z": 
+            # print(deesse_out["sim"][0].val.shape)
+            hard_data.val[0,self.level,:,:] = deesse_out["sim"][0].val[0,0,:,:]
 
 
-    def create_list(self, simODS, par_template):
-        '''
-        Run Impala to create the lists required along a given
-        direction.
+#     def create_list(self, simODS, par_template):
+#         '''
+#         Run Impala to create the lists required along a given
+#         direction.
 
-        Parameters:
-            simODS: object of type :py:class:`Grid`
-                Contains all the info concerning the simulation
-                domain.
-            par_template: class :py:class:`impala_interface.Param`.
-                The parameters for creating the *.in* file for the
-                simulations.
+#         Parameters:
+#             simODS: object of type :py:class:`Grid`
+#                 Contains all the info concerning the simulation
+#                 domain.
+#             par_template: class :py:class:`impala_interface.Param`.
+#                 The parameters for creating the *.in* file for the
+#                 simulations.
 
-        Returns:
-           * Create for each level of multigrid a list in binary format.
-        '''
+#         Returns:
+#            * Create for each level of multigrid a list in binary format.
+#         '''
 
-        # Check which MPS simulation core is in use
-        if nb_threads > 1:
-            if type_threads == "MPI":
-                mps_core = 'ImpalaMPI'
-            else:
-                mps_core = 'ImpalaOMP'
-        elif nb_threads == 1:
-            mps_core = 'Impala'
-        else:
-            print("    Error, wrong number of computation threads (%d)" % 
-                  ( nb_threads ))
-            return -1
+#         # Check which MPS simulation core is in use
+#         if nb_threads > 1:
+#             if type_threads == "MPI":
+#                 mps_core = 'ImpalaMPI'
+#             else:
+#                 mps_core = 'ImpalaOMP'
+#         elif nb_threads == 1:
+#             mps_core = 'Impala'
+#         else:
+#             print("    Error, wrong number of computation threads (%d)" % 
+#                   ( nb_threads ))
+#             return -1
 
-        mps_exe = mps_exes[mps_core]
+#         mps_exe = mps_exes[mps_core]
     
-        in_file_root = IN_FILE_ROOT_LIST # Root name for the files *.in
-        in_file_ext = ext.IMPALA_IN
+#         in_file_root = IN_FILE_ROOT_LIST # Root name for the files *.in
+#         in_file_ext = ext.IMPALA_IN
         
-        print("    Creation of a list along the coordinate %s"
-              %(self.direct))
-        curr_in_file = "%s-%s%s" % (in_file_root, self.direct, in_file_ext)
+#         print("    Creation of a list along the coordinate %s"
+#               %(self.direct))
+#         curr_in_file = "%s-%s%s" % (in_file_root, self.direct, in_file_ext)
     
-        # Add the suffix "exe" to the executable if we are running Windows
-        if os.name == 'nt':
-            mps_exe = mps_exe + ext.EXE
+#         # Add the suffix "exe" to the executable if we are running Windows
+#         if os.name == 'nt':
+#             mps_exe = mps_exe + ext.EXE
         
-        # Create the "*.in" file used for the current simulation step
-        if mps_core == 'Impala':
-            create_in_file4Impala(par_template, self, None, curr_in_file)
-            # ADAPT LATER FOR THE CASE OF AUXILIARY VARIABLES
-            # adaptAuxVarFile(self, simODS)
-            # Create the execution string
-            runSim = ("%s %s %s_ 0 0 0 0 0 1 list_%s   %s.log > %s.out" %  
-                      (mps_exe, curr_in_file, curr_in_file[:-3], 
-                       self.direct, 
-                       curr_in_file[:-3], curr_in_file[:-3]))
-            #print(runSim)
-        elif mps_core == 'ImpalaOMP':
-            create_in_file4Impala(par_template, self, None, curr_in_file)
-            # ADAPT LATER FOR THE CASE OF AUXILIARY VARIABLES
-            # adaptAuxVarFile(self, simODS)
-            # Create the execution string
-            runSim = ("%s %d %s %s_ 0 0 0 0 0 1 list_%s  "
-                      " %s.log > %s.out" %  
-                      (mps_exe, nb_threads, curr_in_file,
-                       curr_in_file[:-3], self.direct , 
-                       curr_in_file[:-3], curr_in_file[:-3]))
-            #print(runSim)
-        elif mps_core == 'ImpalaMPI':
-            # Create the "*.in" file for the current simulation step
-            create_in_file4Impala(in_par, self, curr_hd_file, curr_in_file)
-            # ADAPT LATER FOR THE CASE OF AUXILIARY VARIABLES
-            # adaptAuxVarFile(self, simODS)
-            # Create the execution string
-            runSim = ("mpirun -np %d %s %s %s_ 0 0 0 0 0 1 "
-                      "list_%s  %s.log > %s.out" %  
-                      (nb_threads, mps_exe, curr_in_file,
-                       curr_in_file[:-3], self.direct , 
-                       curr_in_file[:-3], curr_in_file[:-3]))
-        else:
-            print("    ERROR: Wrong MPS engine selected")
+#         # Create the "*.in" file used for the current simulation step
+#         if mps_core == 'Impala':
+#             create_in_file4Impala(par_template, self, None, curr_in_file)
+#             # ADAPT LATER FOR THE CASE OF AUXILIARY VARIABLES
+#             # adaptAuxVarFile(self, simODS)
+#             # Create the execution string
+#             runSim = ("%s %s %s_ 0 0 0 0 0 1 list_%s   %s.log > %s.out" %  
+#                       (mps_exe, curr_in_file, curr_in_file[:-3], 
+#                        self.direct, 
+#                        curr_in_file[:-3], curr_in_file[:-3]))
+#             #print(runSim)
+#         elif mps_core == 'ImpalaOMP':
+#             create_in_file4Impala(par_template, self, None, curr_in_file)
+#             # ADAPT LATER FOR THE CASE OF AUXILIARY VARIABLES
+#             # adaptAuxVarFile(self, simODS)
+#             # Create the execution string
+#             runSim = ("%s %d %s %s_ 0 0 0 0 0 1 list_%s  "
+#                       " %s.log > %s.out" %  
+#                       (mps_exe, nb_threads, curr_in_file,
+#                        curr_in_file[:-3], self.direct , 
+#                        curr_in_file[:-3], curr_in_file[:-3]))
+#             #print(runSim)
+#         elif mps_core == 'ImpalaMPI':
+#             # Create the "*.in" file for the current simulation step
+#             create_in_file4Impala(in_par, self, curr_hd_file, curr_in_file)
+#             # ADAPT LATER FOR THE CASE OF AUXILIARY VARIABLES
+#             # adaptAuxVarFile(self, simODS)
+#             # Create the execution string
+#             runSim = ("mpirun -np %d %s %s %s_ 0 0 0 0 0 1 "
+#                       "list_%s  %s.log > %s.out" %  
+#                       (nb_threads, mps_exe, curr_in_file,
+#                        curr_in_file[:-3], self.direct , 
+#                        curr_in_file[:-3], curr_in_file[:-3]))
+#         else:
+#             print("    ERROR: Wrong MPS engine selected")
                     
-        error_code = os.system(runSim)
+#         error_code = os.system(runSim)
 
-        if(error_code != 0):
-            error_message = ("    ERROR: problems in %(mps_exe)s,"
-                             " error_code=%(error_code)d" % 
-                             locals())
-            sys.exit(error_message)
+#         if(error_code != 0):
+#             error_message = ("    ERROR: problems in %(mps_exe)s,"
+#                              " error_code=%(error_code)d" % 
+#                              locals())
+#             sys.exit(error_message)
         
 
 
@@ -763,8 +677,8 @@ def add_hd(seq_step, new_hd, hard_data, simODS):
     
      
 
-def sim_run(seq_steps, step_max, hard_data, simODS, in_par, seed,
-            res_file_root="result", rcp_lists=False):
+def sim_run(seq_steps, step_max, hard_data, simODS, nthreads=1,
+            rcp_lists=False):
     '''
     Run a `s2Dcd` simulation.
 
@@ -774,10 +688,13 @@ def sim_run(seq_steps, step_max, hard_data, simODS, in_par, seed,
         step_max: int
             The maximum simulation step. Note that the simulation
             domain can be often filled before this step.
-        hard_data: numpy array
-            A numpy array containig all the simulation. The value
-            :py:data:`no_data` is used in location not simulated.
-        simODS: object of type :py:class:`Grid`
+            In that case, a check is made and the simulation should end in
+            advance.
+        hard_data: object of type :py:class:`geone.img.Img`
+            An empty TI, containing `np.nan` at all the locations where a 
+            hard data is not available.
+            The final result will be contained here.
+        simODS: object of type :py:class:`geone.deesseinterface.DeesseInput`
             Contains all the info concerning the simulation domain.
         in_par: string or a object of type `ds_interface.Param`
             The name of the file containing the template of the input
@@ -786,10 +703,6 @@ def sim_run(seq_steps, step_max, hard_data, simODS, in_par, seed,
         seed: instance of the class :py:class:`RandomState`
             To keep track of the random seed and create simulations
             that can be reproduced using the same seed.
-        res_file_root: string
-            The root name of the file containing the output
-            results. The right extension will be added once defined
-            the MPS simulation core.
         rcp_lists: flag (default False)
             This flag is useful if one wants to re-compute the list
             at each s2Dcd simulation step. When True it is a waste of time
@@ -806,17 +719,18 @@ def sim_run(seq_steps, step_max, hard_data, simODS, in_par, seed,
     '''
 
     # Define the name of the output file
-    # if type(in_par) == impala_interface.Param:
-    #     res_file = res_file_root + ext.VTK
-    if type(in_par) == ds_interface.Param:
-        res_file = res_file_root + ext.GSLIB
+    # if isinstance(simODS, geone.deesseinterface.DeesseInput):
+    #      res_file = res_file_root + ext.GSLIB
  
     print("\n    *** Simulation starts *** ")
     stp_max = min(len(seq_steps), step_max)
     for i, seq_step in enumerate(seq_steps[0:stp_max]):
 
-        simul_out = seq_step.simul( i, stp_max, hard_data, simODS,
-                                    in_par, seed, rcp_lists)
+        simul_out = seq_step.simul( i, stp_max, hard_data, simODS, rcp_lists)
+        gn.img.writeImageVtk(hard_data, "simul_step{0:06d}.vtk".format(i+1), data_type='int')
+
+        # FOR THE MOMENT IT CONSIDERS THAT THE 3D DOMAIN IS FULL, NO
+        # MASK OPTION IS HANDLED
 
         if simul_out is None:
             continue
@@ -832,226 +746,231 @@ def sim_run(seq_steps, step_max, hard_data, simODS, in_par, seed,
             
     # Check if the hard_data matrix is all informed
     # (<=> the simulation is completed)
-    if ( numpy.any(hard_data == no_data)):
-        print('\n    WARNING: Some nodes not simulated.\n')
+    
+    # Compute the number of np.nan in the results
+    sum_nan = np.sum(np.isnan(hard_data.val))
+    if ( sum_nan > 0):
+        # Could be useful for debug purposes
+        print('\n    WARNING: Some nodes were not simulated.')
+        print("        Number of NaN nodes: {0}".format(sum_nan))
     else:
         print('\n    All the domain completed!\n')
 
-    print("    *** Print out the result ***")
-    print_result(hard_data, simODS, res_file)
-#            break
+    print("    *** Saving the result ***")
+#     print_result(hard_data, simODS, res_file)
+# #            break
  
 
      
 
-def create_in_file4Impala(in_par, seq_si, file_cond, file_name_sim,
-                          seed=None):
-    '''
-    Create a parameters input file for *Impala*. A big part of the
-    information is read directly from the template input file for
-    *Impala*.
+# def create_in_file4Impala(in_par, seq_si, file_cond, file_name_sim,
+#                           seed=None):
+#     '''
+#     Create a parameters input file for *Impala*. A big part of the
+#     information is read directly from the template input file for
+#     *Impala*.
 
-    Parameters:
-        in_par: object of type `impala_interface.Param`.
-            All the information contained in the template file.
-        seq_si: object of the class :py:class:`SeqStep`.
-            All the informations required to create a simulation for the
-            current simulation step. See the class :py:class:`SeqStep`
-            for details.
-        file_cond: string or None
-            Name of the conditioning file, if None the simulation is
-            considered as non conditional.
-        file_name_sim: string
-            Name of the input paramter file for *Impala*.
-        seed: instance of the class :py:class:`RandomState`, optional
-            To keep track of the random seed and create simulations
-            that can be reproduced using the same seed.  A definition
-            of the seed is not required when the MPS core is called
-            only for the generation of the lists. Therefore, in this
-            case the value of seed can be None, and the value of the
-            module variable `seed_default` is used.
+#     Parameters:
+#         in_par: object of type `impala_interface.Param`.
+#             All the information contained in the template file.
+#         seq_si: object of the class :py:class:`SeqStep`.
+#             All the informations required to create a simulation for the
+#             current simulation step. See the class :py:class:`SeqStep`
+#             for details.
+#         file_cond: string or None
+#             Name of the conditioning file, if None the simulation is
+#             considered as non conditional.
+#         file_name_sim: string
+#             Name of the input paramter file for *Impala*.
+#         seed: instance of the class :py:class:`RandomState`, optional
+#             To keep track of the random seed and create simulations
+#             that can be reproduced using the same seed.  A definition
+#             of the seed is not required when the MPS core is called
+#             only for the generation of the lists. Therefore, in this
+#             case the value of seed can be None, and the value of the
+#             module variable `seed_default` is used.
     
-    Returns:
-        A `*.in` file containing the parameters for running `Impala`.
+#     Returns:
+#         A `*.in` file containing the parameters for running `Impala`.
 
-    .. note::
-        In order to increase the variability of the simulations, a new
-        random seed is generated for each simulation file that is
-        created if a :py:class:`RandomState` instance is provided with
-        the paramter `seed`. Otherwise, the value of the global
-        variable `seed_default` is used.
+#     .. note::
+#         In order to increase the variability of the simulations, a new
+#         random seed is generated for each simulation file that is
+#         created if a :py:class:`RandomState` instance is provided with
+#         the paramter `seed`. Otherwise, the value of the global
+#         variable `seed_default` is used.
 
-    '''
-    curr_par = copy.deepcopy(in_par)
-    curr_par.tis[0].file_name = seq_si.param.tis[0].file_name
-    if seq_si.param.tis[0].nb_aux_var > 0:
-        curr_par.tis[0].aux_var_file_name[0] \
-            = seq_si.param.tis[0].aux_var_file_name[0]
+#     '''
+#     curr_par = copy.deepcopy(in_par)
+#     curr_par.tis[0].file_name = seq_si.param.tis[0].file_name
+#     if seq_si.param.tis[0].nb_aux_var > 0:
+#         curr_par.tis[0].aux_var_file_name[0] \
+#             = seq_si.param.tis[0].aux_var_file_name[0]
 
-    #
-    # Set the parameters for this specific direction
-    #
-    if seq_si.direct == 'x':
-        curr_par.grid.ox = curr_par.grid.ox + seq_si.level*curr_par.grid.dx
-        curr_par.grid.nx = 1
-        # Reduce the size of the templates along the direction that is
-        # not simulated
-        for dt in curr_par.dts:
-            dt.half_size[0] = str(HALF_SIZE_RED*float(dt.half_size[0]))
+#     #
+#     # Set the parameters for this specific direction
+#     #
+#     if seq_si.direct == 'x':
+#         curr_par.grid.ox = curr_par.grid.ox + seq_si.level*curr_par.grid.dx
+#         curr_par.grid.nx = 1
+#         # Reduce the size of the templates along the direction that is
+#         # not simulated
+#         for dt in curr_par.dts:
+#             dt.half_size[0] = str(HALF_SIZE_RED*float(dt.half_size[0]))
 
-        if curr_par.nb_aux_var > 0:
-            # Create the auxiliary variable map for the current
-            # simulation step
-            if AUX_VAR_FULL3D:
-                curr_par.aux_var_files[0] = vn.vtk_slice(
-                    seq_si.param.aux_var_files[0], 'x', seq_si.level) 
-            else:
-                vn.vtk_trasl(seq_si.param.aux_var_files[0], (curr_par.grid.ox,curr_par.grid.oy,curr_par.grid.oz))
+#         if curr_par.nb_aux_var > 0:
+#             # Create the auxiliary variable map for the current
+#             # simulation step
+#             if AUX_VAR_FULL3D:
+#                 curr_par.aux_var_files[0] = vn.vtk_slice(
+#                     seq_si.param.aux_var_files[0], 'x', seq_si.level) 
+#             else:
+#                 vn.vtk_trasl(seq_si.param.aux_var_files[0], (curr_par.grid.ox,curr_par.grid.oy,curr_par.grid.oz))
 
-                curr_par.aux_var_files[0] = copy.deepcopy(seq_si.param.aux_var_files[0])
-        if curr_par.mask_map_flag == "MASK_MAP_ON":
-            # Create a slice in the main 3D MASK file to be used in
-            # the 2D simulation
-            curr_par.mask_map_file_name = vn.vtk_slice(
-                seq_si.param.mask_map_file_name, 'x', seq_si.level)
+#                 curr_par.aux_var_files[0] = copy.deepcopy(seq_si.param.aux_var_files[0])
+#         if curr_par.mask_map_flag == "MASK_MAP_ON":
+#             # Create a slice in the main 3D MASK file to be used in
+#             # the 2D simulation
+#             curr_par.mask_map_file_name = vn.vtk_slice(
+#                 seq_si.param.mask_map_file_name, 'x', seq_si.level)
 
-    elif seq_si.direct == 'y':
-        curr_par.grid.oy = curr_par.grid.oy + seq_si.level*curr_par.grid.dy
-        curr_par.grid.ny = 1
-        for dt in curr_par.dts:
-            dt.half_size[1] = str(HALF_SIZE_RED*float(dt.half_size[1]))
-        if curr_par.nb_aux_var > 0:
-            if AUX_VAR_FULL3D:
-                curr_par.aux_var_files[0] = vn.vtk_slice(
-                    seq_si.param.aux_var_files[0], 'y', seq_si.level)
-            else:
-                vn.vtk_trasl(seq_si.param.aux_var_files[0], (curr_par.grid.ox,curr_par.grid.oy,curr_par.grid.oz))
-                curr_par.aux_var_files[0] = copy.deepcopy(seq_si.param.aux_var_files[0])
+#     elif seq_si.direct == 'y':
+#         curr_par.grid.oy = curr_par.grid.oy + seq_si.level*curr_par.grid.dy
+#         curr_par.grid.ny = 1
+#         for dt in curr_par.dts:
+#             dt.half_size[1] = str(HALF_SIZE_RED*float(dt.half_size[1]))
+#         if curr_par.nb_aux_var > 0:
+#             if AUX_VAR_FULL3D:
+#                 curr_par.aux_var_files[0] = vn.vtk_slice(
+#                     seq_si.param.aux_var_files[0], 'y', seq_si.level)
+#             else:
+#                 vn.vtk_trasl(seq_si.param.aux_var_files[0], (curr_par.grid.ox,curr_par.grid.oy,curr_par.grid.oz))
+#                 curr_par.aux_var_files[0] = copy.deepcopy(seq_si.param.aux_var_files[0])
 
-        if curr_par.mask_map_flag == "MASK_MAP_ON":
-            # Create a slice in the main 3D MASK file to be used in
-            # the 2D simulation
-            curr_par.mask_map_file_name = vn.vtk_slice(
-                seq_si.param.mask_map_file_name, 'y', seq_si.level)
+#         if curr_par.mask_map_flag == "MASK_MAP_ON":
+#             # Create a slice in the main 3D MASK file to be used in
+#             # the 2D simulation
+#             curr_par.mask_map_file_name = vn.vtk_slice(
+#                 seq_si.param.mask_map_file_name, 'y', seq_si.level)
 
-    elif seq_si.direct == 'z':
-        curr_par.grid.oz = curr_par.grid.oz + seq_si.level*curr_par.grid.dz
-        curr_par.grid.nz = 1
-        for dt in curr_par.dts:
-            dt.half_size[2] = str(HALF_SIZE_RED*float(dt.half_size[2]))
-        if curr_par.nb_aux_var > 0:
-            if AUX_VAR_FULL3D:
-                curr_par.aux_var_files[0] = vn.vtk_slice(
-                    seq_si.param.aux_var_files[0], 'z', seq_si.level)
-            else:
-                vn.vtk_trasl(seq_si.param.aux_var_files[0], (curr_par.grid.ox,curr_par.grid.oy,curr_par.grid.oz))
-                curr_par.aux_var_files[0] = copy.deepcopy(seq_si.param.aux_var_files[0])
-        if curr_par.mask_map_flag == "MASK_MAP_ON":
-            # Create a slice in the main 3D MASK file to be used in
-            # the 2D simulation
-            curr_par.mask_map_file_name = vn.vtk_slice(
-                seq_si.param.mask_map_file_name, 'z', seq_si.level)
+#     elif seq_si.direct == 'z':
+#         curr_par.grid.oz = curr_par.grid.oz + seq_si.level*curr_par.grid.dz
+#         curr_par.grid.nz = 1
+#         for dt in curr_par.dts:
+#             dt.half_size[2] = str(HALF_SIZE_RED*float(dt.half_size[2]))
+#         if curr_par.nb_aux_var > 0:
+#             if AUX_VAR_FULL3D:
+#                 curr_par.aux_var_files[0] = vn.vtk_slice(
+#                     seq_si.param.aux_var_files[0], 'z', seq_si.level)
+#             else:
+#                 vn.vtk_trasl(seq_si.param.aux_var_files[0], (curr_par.grid.ox,curr_par.grid.oy,curr_par.grid.oz))
+#                 curr_par.aux_var_files[0] = copy.deepcopy(seq_si.param.aux_var_files[0])
+#         if curr_par.mask_map_flag == "MASK_MAP_ON":
+#             # Create a slice in the main 3D MASK file to be used in
+#             # the 2D simulation
+#             curr_par.mask_map_file_name = vn.vtk_slice(
+#                 seq_si.param.mask_map_file_name, 'z', seq_si.level)
 
-    else:
-        print('    Error in `create_in_file4Impala`')
-        return -1
+#     else:
+#         print('    Error in `create_in_file4Impala`')
+#         return -1
 
-    # Define a value for the seed
-    if seed:
-        curr_par.seed = seed.randint(min_rand_int,max_rand_int)
-    else:
-        curr_par.seed = seed_default
+#     # Define a value for the seed
+#     if seed:
+#         curr_par.seed = seed.randint(min_rand_int,max_rand_int)
+#     else:
+#         curr_par.seed = seed_default
 
-    if file_cond:
-        curr_par.conditional_flag = "CONDITIONAL_ON"
-        # CONNECTIVITY NOT IMPLEMENTED FOR THE MOMENT
-        curr_par.connectivity_flag  = "CONNECTIVITY_OFF"
-        curr_par.conditional_file_name = file_cond
-      #  curr_par.data_pointset_nb = 1 
-      #  curr_par.data_pointset_files = []
-      #  curr_par.data_pointset_files.append( file_cond )
+#     if file_cond:
+#         curr_par.conditional_flag = "CONDITIONAL_ON"
+#         # CONNECTIVITY NOT IMPLEMENTED FOR THE MOMENT
+#         curr_par.connectivity_flag  = "CONNECTIVITY_OFF"
+#         curr_par.conditional_file_name = file_cond
+#       #  curr_par.data_pointset_nb = 1 
+#       #  curr_par.data_pointset_files = []
+#       #  curr_par.data_pointset_files.append( file_cond )
 
-    curr_par.out_file = os.path.splitext(file_name_sim)[0] + ext.VTK
-    curr_par.out_report_file = os.path.splitext(file_name_sim)[0] + ext.TXT
-    curr_par.print_file(file_name_sim)
-
-
-def create_in_file4MPDS(in_par, seq_si, file_cond, file_name_sim,
-                        seed=None):
-    '''
-    Create a parameters input file for `MPDS` adapted to the current
-    simulation step and the current conditioning data file.
+#     curr_par.out_file = os.path.splitext(file_name_sim)[0] + ext.VTK
+#     curr_par.out_report_file = os.path.splitext(file_name_sim)[0] + ext.TXT
+#     curr_par.print_file(file_name_sim)
 
 
-    Parameters:
-        in_par: object of type `ds_interface.Param`.
-            All the info about the in template file.
-        seq_si: object of the class :py:class:`SeqStep`.
-            (sequence stepA info) All the informations required to
-            create a simulation for the current simulation step. See
-            the class :py:class:`SeqStep` for details.
-        file_cond: string or None
-            Name of the conditioning file, if None the simulation is
-            considered as non conditional.
-        file_name_sim: string
-            Name of the input paramter file for `MPDS`.
-        seed: instance of the class :py:class:`RandomState`, optional
-            To keep track of the random seed and create simulations
-            that can be reproduced using the same seed.  A definition
-            of the seed is not required when the MPS core is called
-            only for the generation of the lists. Therefore, in this
-            case the value of seed can be None, and the value of the
-            module variable `seed_default` is used.
+# def create_in_file4MPDS(in_par, seq_si, file_cond, file_name_sim,
+#                         seed=None):
+#     '''
+#     Create a parameters input file for `MPDS` adapted to the current
+#     simulation step and the current conditioning data file.
 
-    Returns:
-        A `*.in` file for the current simulation.
 
-    .. note::
-        In order to increase the variability of the simulations, a new
-        random seed is generated for each simulation file that is
-        created if a :py:class:`RandomState` instance is provided with
-        the paramter `seed`. Otherwise, the value of the global
-        variable `seed_default` is used.
+#     Parameters:
+#         in_par: object of type `ds_interface.Param`.
+#             All the info about the in template file.
+#         seq_si: object of the class :py:class:`SeqStep`.
+#             (sequence stepA info) All the informations required to
+#             create a simulation for the current simulation step. See
+#             the class :py:class:`SeqStep` for details.
+#         file_cond: string or None
+#             Name of the conditioning file, if None the simulation is
+#             considered as non conditional.
+#         file_name_sim: string
+#             Name of the input paramter file for `MPDS`.
+#         seed: instance of the class :py:class:`RandomState`, optional
+#             To keep track of the random seed and create simulations
+#             that can be reproduced using the same seed.  A definition
+#             of the seed is not required when the MPS core is called
+#             only for the generation of the lists. Therefore, in this
+#             case the value of seed can be None, and the value of the
+#             module variable `seed_default` is used.
 
-    '''
+#     Returns:
+#         A `*.in` file for the current simulation.
 
-    curr_par = copy.deepcopy(in_par)
+#     .. note::
+#         In order to increase the variability of the simulations, a new
+#         random seed is generated for each simulation file that is
+#         created if a :py:class:`RandomState` instance is provided with
+#         the paramter `seed`. Otherwise, the value of the global
+#         variable `seed_default` is used.
 
-#    print(curr_par)
-    curr_par.tis[0].file_name = seq_si.param.tis[0].file_name
+#     '''
 
-    # Set to 0.0 the search radius along the right direction
-    if seq_si.direct == 'x':
-        for var in curr_par.vars:
-            var.search_r_x = 0.0
-#        curr_par.vars[0].search_r_x = 0.0
-        curr_par.grid.ox = seq_si.level
-        curr_par.grid.nx = 1
-    elif seq_si.direct == 'y':
-        for var in curr_par.vars:
-            var.search_r_y = 0.0
- #       curr_par.vars[0].search_r_y = 0.0
-        curr_par.grid.oy = seq_si.level
-        curr_par.grid.ny = 1
-    elif seq_si.direct == 'z':
-        for var in curr_par.vars:
-            var.search_r_z = 0.0
-#        curr_par.vars[0].search_r_z = 0.0
-        curr_par.grid.oz = seq_si.level
-        curr_par.grid.nz = 1
-    else:
-        print('    Error in `create_in_file4MPDS`')
+#     curr_par = copy.deepcopy(in_par)
 
-    curr_par.seed = seed.randint(min_rand_int, max_rand_int)
+# #    print(curr_par)
+#     curr_par.tis[0].file_name = seq_si.param.tis[0].file_name
 
-    if file_cond:
-        curr_par.data_pointset_nb = 1 
-        curr_par.data_pointset_files = []
-        curr_par.data_pointset_files.append( file_cond )
+#     # Set to 0.0 the search radius along the right direction
+#     if seq_si.direct == 'x':
+#         for var in curr_par.vars:
+#             var.search_r_x = 0.0
+# #        curr_par.vars[0].search_r_x = 0.0
+#         curr_par.grid.ox = seq_si.level
+#         curr_par.grid.nx = 1
+#     elif seq_si.direct == 'y':
+#         for var in curr_par.vars:
+#             var.search_r_y = 0.0
+#  #       curr_par.vars[0].search_r_y = 0.0
+#         curr_par.grid.oy = seq_si.level
+#         curr_par.grid.ny = 1
+#     elif seq_si.direct == 'z':
+#         for var in curr_par.vars:
+#             var.search_r_z = 0.0
+# #        curr_par.vars[0].search_r_z = 0.0
+#         curr_par.grid.oz = seq_si.level
+#         curr_par.grid.nz = 1
+#     else:
+#         print('    Error in `create_in_file4MPDS`')
 
-    curr_par.out_file = file_name_sim[:-3] + ext.GSLIB
-    curr_par.out_report_file = file_name_sim[:-3] + ext.TXT
-    curr_par.print_file(file_name_sim)
+#     curr_par.seed = seed.randint(min_rand_int, max_rand_int)
+
+#     if file_cond:
+#         curr_par.data_pointset_nb = 1 
+#         curr_par.data_pointset_files = []
+#         curr_par.data_pointset_files.append( file_cond )
+
+#     curr_par.out_file = file_name_sim[:-3] + ext.GSLIB
+#     curr_par.out_report_file = file_name_sim[:-3] + ext.TXT
+#     curr_par.print_file(file_name_sim)
 
 
     
@@ -1409,13 +1328,13 @@ def adaptAuxVarFile(seq, simODS):
     f.close()
 
 
-def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm):
+def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads):
     '''
     Print some information about the parameters of the simulation.
 
     Parameters:
-        simODS: object of type :py:class:`Grid`
-            Information about the simulation grid.
+        simODS: object of type :py:class:`geone.img.Img`
+            Contains info about the simulation grid.
         par_Xnorm: object of type :py:class:`Param` or :py:class:`Param`.
             Information about the `Impala` parameters normal to the
             direction *x*.  (idem for *y* and *z*) and for `MPDS`.
@@ -1432,11 +1351,14 @@ def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm):
 
     for dire, par_dir in zip(('x','y','z'),(par_Xnorm,
                                             par_Ynorm, par_Znorm)):
+        # For each direction, print the TI used
         print("    Plane normal to axis *", dire, "*:", sep='')
 
         # Check the MPS simulation engine in use
-        if type(par_dir) == ds_interface.Param:
-            print('        MPS simulation engine: "Deesse"')
+        # print(type(par_dir))
+        if par_dir is not None:
+            if isinstance(par_dir, gn.deesseinterface.DeesseInput):
+                print('        MPS simulation engine: "Deesse" with {0} threads'.format(nthreads))
         # 
         # If you want to use a different simulation engine, you can select
         # it with something like this:
@@ -1444,11 +1366,14 @@ def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm):
         # elif type(par_dir) == XXX_interface.Param:
         #     print('        MPS simulation engine: "XXX"')
         #
+            else:
+                print('        Warning: unknown MPS simulation engine')
+        
+            print('        TI file:               "', 
+                  par_dir.TI.name, '"', sep='')
         else:
-            print('        Warning: unknown MPS simulation engine')
-
-        print('        TI file:               "', 
-              par_dir.tis[0].file_name, '"', sep='')
+            # There is no training image along the selected direction
+            print('        No TI defined ')
         # if (par_dir.tis[0].file_name is not None and
         #     type(par_dir) == impala_interface.Param):
         #     if par_dir.nb_aux_var > 0:
@@ -1507,7 +1432,7 @@ def create_lists( simODS, par_template, par_Xnorm, par_Ynorm, par_Znorm):
 
 
 
-def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, pseudo3D=0):
+def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads=1, pseudo3D=0):
     '''
     Creates a simple simulation sequence.
 
@@ -1520,6 +1445,7 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, pseudo3D=0):
         pseudo3D: integer (default=0)
             Set or not the "pseudo3D" simulation option when this
             value is >0.
+            WARNING: FOR THE MOMENT THIS IS NOT IMPLEMENTED HERE.
     Returns:
        * A sequence of :py:class:`SeqStep` objects, with all the
          information needed to run each simulation step.
@@ -1556,9 +1482,7 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, pseudo3D=0):
     for i in range(max(simODS.nx, simODS.ny, simODS.nz)):
         if ( ti_x and i < simODS.nx ):
             try:
-                seq.append(
-                    copy.deepcopy(SeqStep( 'x', sim_path_Xnorm[i],
-                                           par_Xnorm, pseudo3D)))
+                seq.append(SeqStep( 'x', sim_path_Xnorm[i], par_Xnorm, nthreads))
             except IndexError:
                 print("\n"
                       "    ERROR in 'create_seq'.\n"
@@ -1569,9 +1493,7 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, pseudo3D=0):
                      
         if ( ti_y and i < simODS.ny ):
             try:
-                seq.append(
-                    copy.deepcopy(SeqStep( 'y', sim_path_Ynorm[i],
-                                           par_Ynorm, pseudo3D)))
+                seq.append(SeqStep( 'y', sim_path_Ynorm[i], par_Ynorm, nthreads))
             except IndexError:
                 print("\n"
                       "    ERROR in 'create_seq'.\n"
@@ -1581,9 +1503,7 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, pseudo3D=0):
                       "but '{0}' was provided.\n".format(simODS.ny))
         if ( ti_z and i < simODS.nz ):
             try:
-                seq.append(
-                    copy.deepcopy(SeqStep( 'z', sim_path_Znorm[i],
-                                           par_Znorm, pseudo3D)))
+                seq.append( SeqStep( 'z', sim_path_Znorm[i], par_Znorm, nthreads))
             except IndexError:
                 print("\n"
                       "    ERROR in 'create_seq'.\n"
@@ -1597,23 +1517,28 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, pseudo3D=0):
 
 def check_ti_file(par):
     '''
-    Check if a parameter file for `Impala` or `MPDS` has a name for
-    the TI file or not.
+    Check if the parameter info for the simulation along a given 
+    direction have a TI assigned.
 
     Parameters:
-        par: object of type `Param` or `Param`.
+        par: geone.deesseinterface.DeesseInput 
+            Contains the info about the simulation parameters, including the
+            TI.
 
     Returns:
-        True if a TI file name is defines, false if None.
+        True if a TI file name is defined, false if None.
 
     .. note:
         Check only the 1st TI.
     '''
-    
-    if par.tis[0].file_name:
-        return True
+    if par is not None:
+        if par.TI.name:
+            return True
+        else:
+            return False
     else:
-        return False
+        # LATER PUT THIS PROPERLY INTO A LOG FILE.
+        print("    WARNING: At least one TI is missing along one direction.")
  
 
 def add_gslib_pointdata(data_files, hard_data, simODS):

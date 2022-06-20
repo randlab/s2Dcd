@@ -4,3 +4,4 @@ s2Dcd/__pycache__*
 build
 dist
 s2Dcd.egg-info
+examples/01_Strebelle/*.vtk
