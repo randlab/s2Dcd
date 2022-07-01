@@ -777,7 +777,7 @@ def sim_run(seq_steps, step_max, hard_data, simODS, nthreads=1,
 #             All the informations required to create a simulation for the
 #             current simulation step. See the class :py:class:`SeqStep`
 #             for details.
-#         file_cond: string or None
+#         file_cond: string or Nonenp.reshape(data_x1["facies"].astype("int").values, (nz, ny, nx))
 #             Name of the conditioning file, if None the simulation is
 #             considered as non conditional.
 #         file_name_sim: string
