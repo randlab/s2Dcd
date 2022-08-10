@@ -5,3 +5,7 @@ build
 dist
 s2Dcd.egg-info
 examples/01_Strebelle/*.vtk
+examples/02_*
+examples/03_*
+examples/04_*
+examples/deesse_easy

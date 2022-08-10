@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# [build-system]
+# requires = ["hatchling"]
+# build-backend = "hatchling.build"
+
+[project]
+name = "s2Dcd"
+version = "0.0.7"
+authors = [
+{name="Alessandro Comunian", email="alessandro.comunian@gmail.com"}
+]
+description = "A package to run the sequential 2D (multiple-point statistics) simulation with conditioning data."
+readme = "README.md"
+# license = { file="LICENSE.txt" }
+requires-python = ">=3.7"
+# install_requires
+dependencies = ["matplotlib", "numpy", "geone"]
+# packages = ['s2Dcd', 'deesse', 'utili', 'ext']
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",		
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Image Processing"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/randlab/s2Dcd"
+"Bug Tracker" = "https://github.com/pypa/s2Dcd/issues"
+

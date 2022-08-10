@@ -31,7 +31,7 @@ import copy
 
 # Import non-standard modules
 import s2Dcd.s2Dcd as s2Dcd
-import s2Dcd.utili  as utili
+import s2Dcd.utili as utili
 
 # Print header and start counting time
 time_start = utili.print_start() 
@@ -43,9 +43,12 @@ nthreads = 8
 # Defalut information that 
 ti3Dini_file = "ti3Dini.json"
 
+# %%
 # Read an external file containing the dimensions of the output grid.
 with open(ti3Dini_file, "r") as json_in:
     ti3Dini = json.load(json_in)
+    
+# %%    
 # The initial content is NaN
 ti3Dini["val"] = np.full([ti3Dini["nx"], ti3Dini["ny"], ti3Dini["nz"]], np.nan)
 
@@ -57,8 +60,10 @@ res3D = gn.img.Img(**ti3Dini)
 ds3Din_file = "ds3Din.json"
 with open(ds3Din_file, "r") as json_in:
     ds3Din_dict = json.load(json_in)
-ds3Din_dict["TI"] = res3D
+ds3Din_dict["TI"] = np.array([res3D])
 
+
+# %%
 # Set up the general parameters to be used for the target 3D final result
 ds3Din = gn.deesseinterface.DeesseInput(**ds3Din_dict)
 
@@ -74,7 +79,7 @@ dsYin.ny = 1
 # Read the training image normal to the *y* axis
 tiY = gn.img.readImageGslib(os.path.join("..","data","strebelle", 
                                            "ti_250x1x250.gslib"))
-dsYin.TI = tiY
+dsYin.TI = np.array([tiY])
 
 # Set up the main parameters for the simulation normal to axis *z*, starting
 # from the 3D template
@@ -83,7 +88,7 @@ dsZin.nz = 1
 # Read the training image normal to the *z* axis
 tiZ = gn.img.readImageGslib(os.path.join("..","data","strebelle", 
                                            "ti_250x250x1.gslib"))
-dsZin.TI = tiZ
+dsZin.TI = np.array([tiZ])
 
 # The max number of simulation steps to be performed. You can use it
 # if you want to stop the simulation before the 3D domain is

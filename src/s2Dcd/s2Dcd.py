@@ -136,9 +136,9 @@ import geone as gn
 
 # Import "custom" modules
 # import s2Dcd.deesse as ds_interface REPLACED BY THE GEONE "deesseinterface"
-import s2Dcd.gslibnumpy as gslibnumpy
+# import s2Dcd.gslibnumpy as gslibnumpy
 import s2Dcd.utili as utili
-import s2Dcd.grid as grid
+# import s2Dcd.grid as grid
 import s2Dcd.ext as ext
 
 
@@ -419,33 +419,32 @@ class SeqStep(object):
         
         '''
 
-        # Check which MPS simulation core is in use
-        # THIS COULD BE IMPROVED/OMITTED...
+        
+        # This is only for pretty printing purposes...
         intlen = len(str(step_max))
+        
+        # Check which MPS simulation engine is in use.
+        # NOTE THAT AT THE MOMENT THE ONLY MPS SIMULATION ENGINE IMPLEMENTED
+        # IS THE DS.
         if isinstance(simODS, gn.deesseinterface.DeesseInput):
-            # print('    Seq.step {0:{4}d} of {1:{4}d} (max), MPS sim. engine: "{2}" ({3} threads)'.format(
-                # step+1, step_max, "DeeSse", nthreads, intlen), end=" ")
             print('    Seq.step {0:{2}d} of {1:{2}d} (max)'.format(
                 step+1, step_max, intlen), end=" ")            
         else:
             print("    WARNING: unknown MPS simulation engine!")
             return -1
-            
-    
-        # Look if there exists some conditioning data along the
-        # current simulation slice
+        
         print("- slice simulated: {0.direct:s} = {0.level:4d}"
               "".format(self))  
     
+       
         #   
         # Set up the slice which contains the hard data
         #
         # WARNING: 
-        #     1) FOR THE MOMENT THERE IS THE LIMITATION OF USING
-        #        ONLY ONE TI.
+        #     1) FOR THE MOMENT THERE IS THE LIMITATION OF USING ONLY ONE TI.
         #        HEREINAFTER THEN THE VALUE "0" SHOULD BE MANAGED ACCORDINGLY
         #
-        #     2) WHEN ACCESSING THE TI WITH "VAL", THEN BE    
+        #     2) WHEN ACCESSING THE TI WITH "VAL", THEN BE...    
         curr_hd = copy.deepcopy(hard_data)
         curr_par = copy.deepcopy(self.param)
         if self.direct == "x":
@@ -454,8 +453,9 @@ class SeqStep(object):
             curr_hd.val = np.reshape(hard_data.val[0,:,:,self.level],
                                  (1,1,simODS.ny,simODS.nz))
             # Set the parameters for the simulation
-            # QUI BISOGNERÀ FARE ATTENZIONE SE È IL LIVELLO O LA COORDINATA...
-            # IDEM ANCHE PER LE ALTRE DIREZIONI!
+            # NOTE: DOUBLE CHECK HERE IF "level" REFERS TO THE TRUE COORDINATE
+            #       OR TO THE INDEX WITHIN THE MATRIX. DOUBLE CHECK ALSO FOR
+            #       THE OTHER DIRECTIONS.
             curr_par.ox = self.level
             
         elif self.direct == "y":
@@ -479,25 +479,26 @@ class SeqStep(object):
                                          # text='TI')
         
         if isinstance(curr_hd, gn.img.Img):
-            curr_par.dataImage = [curr_hd]
+            curr_par.dataImage = np.array([curr_hd])
         else:
-            print("ERROR, wrong input type for dataImage")
-        gn.img.writeImageVtk(curr_hd, "s2Dcd_step{0:06d}.vtk".format(step+1), data_type='int')
+            print("ERROR, wrong input type for dataImage!")
+        # gn.img.writeImageVtk(curr_hd, "s2Dcd_step{0:06d}.vtk".format(step+1), data_type='int')
 
         if not isinstance(curr_par, gn.deesseinterface.DeesseInput):
         # LATER ADD A MESSAGE IN THE LOG FILE...
-            print("ERROR, wrong input type for dataImage")
+            print("ERROR, wrong input type for DeesseInput parameters!")
         
         # Check if in the slice there are hard data.
         nb_nan = np.sum(np.isnan(curr_hd.val))
         if(nb_nan == 0):
             # No NaN, all the nodes have a valid value, no need to simulate.
-            # The slice contain some NaN values (to be filled)
             return 1
+        # print("ACOMUNIAN")
         # print(curr_par)
         # print(curr_par.dataImage)
         deesse_out = gn.deesseinterface.deesseRun(curr_par, 
-                                                  nthreads=self.nthreads, verbose=verbose)
+                                                  nthreads=self.nthreads,
+                                                  verbose=verbose)        
         gn.img.writeImageVtk(curr_hd, "s2Dcd_step{0:06d}.vtk".format(step+1),
                              data_type='int', missing_value=-9999999)
         
@@ -536,11 +537,14 @@ class SeqStep(object):
         
 #         # Add the new hard data to the "storage" array
 #         add_hd(self, new_hd, hard_data, simODS)
+
+            # print(deesse_out) # ACOMUNIAN
         if self.direct == "x":
             # print(deesse_out["sim"][0].val.shape)
             hard_data.val[0,:,:,self.level] = deesse_out["sim"][0].val[0,:,:,0]
         elif self.direct == "y":            
             # print(deesse_out["sim"][0].val.shape)
+            
             hard_data.val[0,:,self.level,:] = deesse_out["sim"][0].val[0,:,0,:]
         elif self.direct == "z": 
             # print(deesse_out["sim"][0].val.shape)
@@ -727,7 +731,7 @@ def sim_run(seq_steps, step_max, hard_data, simODS, nthreads=1,
     for i, seq_step in enumerate(seq_steps[0:stp_max]):
 
         simul_out = seq_step.simul( i, stp_max, hard_data, simODS, rcp_lists)
-        gn.img.writeImageVtk(hard_data, "simul_step{0:06d}.vtk".format(i+1), data_type='int')
+        # gn.img.writeImageVtk(hard_data, "simul_step{0:06d}.vtk".format(i+1), data_type='int')
 
         # FOR THE MOMENT IT CONSIDERS THAT THE 3D DOMAIN IS FULL, NO
         # MASK OPTION IS HANDLED
@@ -1346,7 +1350,7 @@ def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads):
     ''' 
 
     print("\n    Dimension of the simulation domain:"
-          " {0.nx:d}x{0.ny:d}x{0.nz:d}" \
+          " {0.nx:d} x {0.ny:d} x {0.nz:d}" \
           .format(simODS))
 
     for dire, par_dir in zip(('x','y','z'),(par_Xnorm,
@@ -1358,7 +1362,7 @@ def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads):
         # print(type(par_dir))
         if par_dir is not None:
             if isinstance(par_dir, gn.deesseinterface.DeesseInput):
-                print('        MPS simulation engine: "Deesse" with {0} threads'.format(nthreads))
+                print('        MPS simulation engine: "DeeSse" with {0} threads'.format(nthreads))
         # 
         # If you want to use a different simulation engine, you can select
         # it with something like this:
@@ -1369,8 +1373,9 @@ def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads):
             else:
                 print('        Warning: unknown MPS simulation engine')
         
+            # NOTE: HERE ONLY ONE TI IS CONSIDERED.
             print('        TI file:               "', 
-                  par_dir.TI.name, '"', sep='')
+                  par_dir.TI[0].name, '"', sep='')
         else:
             # There is no training image along the selected direction
             print('        No TI defined ')
@@ -1466,9 +1471,9 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads=1, pseudo3D=0):
     
     # Create "matrioska" simulation intervals only along directions
     # normal to a provided TI.
-    ti_x = check_ti_file(par_Xnorm)
-    ti_y = check_ti_file(par_Ynorm)
-    ti_z = check_ti_file(par_Znorm)
+    ti_x = check_ti_file(par_Xnorm, "yz")
+    ti_y = check_ti_file(par_Ynorm, "xz")
+    ti_z = check_ti_file(par_Znorm, "xy")
     if ti_x :
         sim_path_Xnorm = matrioska_interval(simODS.nx)
     if ti_y :
@@ -1515,7 +1520,7 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads=1, pseudo3D=0):
     return seq
 
 
-def check_ti_file(par):
+def check_ti_file(par, plane=None):
     '''
     Check if the parameter info for the simulation along a given 
     direction have a TI assigned.
@@ -1532,87 +1537,88 @@ def check_ti_file(par):
         Check only the 1st TI.
     '''
     if par is not None:
-        if par.TI.name:
+        # NOTE: WORKS ONLY  FOR 1 TI
+        if par.TI[0].name:
             return True
         else:
             return False
     else:
         # LATER PUT THIS PROPERLY INTO A LOG FILE.
-        print("    WARNING: At least one TI is missing along one direction.")
+        print("    WARNING: TI is missing along plane *{0}*.".format(plane))
  
 
-def add_gslib_pointdata(data_files, hard_data, simODS):
-    '''
-    Add the hard data contained in a number of GSLIB point data files.
+# def add_gslib_pointdata(data_files, hard_data, simODS):
+#     '''
+#     Add the hard data contained in a number of GSLIB point data files.
 
-    Parameters:
-        files: list of strings
-            A number of files containing the data. Note that this must
-            be in a list format even if only one file is
-            considered. For example, you should always use a syntax
-            like `["file1.gslib"]` even if you provide only one file.
-        hard_data: 3D numpy array
-            Where all the simulated points are stored.
-        simODS: object of type :py:class:`Grid`
-            Contains all the info concerning the simulation domain.
+#     Parameters:
+#         files: list of strings
+#             A number of files containing the data. Note that this must
+#             be in a list format even if only one file is
+#             considered. For example, you should always use a syntax
+#             like `["file1.gslib"]` even if you provide only one file.
+#         hard_data: 3D numpy array
+#             Where all the simulated points are stored.
+#         simODS: object of type :py:class:`Grid`
+#             Contains all the info concerning the simulation domain.
 
-    Returns:
-        Update the content of the array `hard_data`.
+#     Returns:
+#         Update the content of the array `hard_data`.
 
-    ''' 
+#     ''' 
 
-    #
-    # NOTE: I SHOULD CHECK IF THE COORDINATES OF THE POINTS
-    #       CORRESPONDS TO THE TRUE COORDINATES INSIDE THE GRID SYSTEM
-    #       OF IMPALA!
-    #
+#     #
+#     # NOTE: I SHOULD CHECK IF THE COORDINATES OF THE POINTS
+#     #       CORRESPONDS TO THE TRUE COORDINATES INSIDE THE GRID SYSTEM
+#     #       OF IMPALA!
+#     #
 
-    for data_file in data_files:
-        data_all, header = gslibnumpy.gslib_points2numpy(data_file)
-        x = data_all['x']
-        y = data_all['y']
-        z = data_all['z']
-        data = data_all['data']
+#     for data_file in data_files:
+#         data_all, header = gslibnumpy.gslib_points2numpy(data_file)
+#         x = data_all['x']
+#         y = data_all['y']
+#         z = data_all['z']
+#         data = data_all['data']
 
-        nb_data_added = 0
-        for i in range(len(x)):
-           ix = int(round( ( x[i] - simODS.ox) / simODS.dx))
-           if (ix < 0 or ix > simODS.nx-1):
-               print('    Warning: detected conditioning data '
-                     'outside the ', end=' ')
-               print('simulation domain. Datum ignored.')
-               print('        function: "add_gslib_pointdata"')
-               print('        data file: "', data_file,'"')
-               simODS.print_intervals('x')
-               continue
-           iy = int(round( ( y[i] - simODS.oy) / simODS.dy))
-           if (iy < 0 or iy > simODS.ny-1):
-               print('    Warning: detected conditioning data outside'
-                     ' the ', end=' ')
-               print('simulation domain. Datum ignored.')
-               print('        function: "add_gslib_pointdata"')
-               print('        data file: "', data_file,'"')
-               simODS.print_intervals('y')
-               continue
-           iz = int(round( ( z[i] - simODS.oz) / simODS.dz))
-           if (iz < 0 or iz > simODS.nz-1):
-               print('    Warning: detected conditioning data'
-                     ' outside the ', end=' ')
-               print('simulation domain. Datum ignored.')
-               print('        function: "add_gslib_pointdata"')
-               print('        data file: "', data_file,'"')
-               simODS.print_intervals('z')
-               continue
+#         nb_data_added = 0
+#         for i in range(len(x)):
+#            ix = int(round( ( x[i] - simODS.ox) / simODS.dx))
+#            if (ix < 0 or ix > simODS.nx-1):
+#                print('    Warning: detected conditioning data '
+#                      'outside the ', end=' ')
+#                print('simulation domain. Datum ignored.')
+#                print('        function: "add_gslib_pointdata"')
+#                print('        data file: "', data_file,'"')
+#                simODS.print_intervals('x')
+#                continue
+#            iy = int(round( ( y[i] - simODS.oy) / simODS.dy))
+#            if (iy < 0 or iy > simODS.ny-1):
+#                print('    Warning: detected conditioning data outside'
+#                      ' the ', end=' ')
+#                print('simulation domain. Datum ignored.')
+#                print('        function: "add_gslib_pointdata"')
+#                print('        data file: "', data_file,'"')
+#                simODS.print_intervals('y')
+#                continue
+#            iz = int(round( ( z[i] - simODS.oz) / simODS.dz))
+#            if (iz < 0 or iz > simODS.nz-1):
+#                print('    Warning: detected conditioning data'
+#                      ' outside the ', end=' ')
+#                print('simulation domain. Datum ignored.')
+#                print('        function: "add_gslib_pointdata"')
+#                print('        data file: "', data_file,'"')
+#                simODS.print_intervals('z')
+#                continue
 
-           #
-           # NOTE: IF I COULD ACCESS THE ALLOWED FACIES OF IMPALA,
-           #       HERE I COULD CHECK IF THE DATA IS INSIDE THE RANGE
-           #       OF AVAILABLE FACIES.
-           #
-           hard_data[ix,iy,iz] = data[i]
-           nb_data_added = nb_data_added + 1
+#            #
+#            # NOTE: IF I COULD ACCESS THE ALLOWED FACIES OF IMPALA,
+#            #       HERE I COULD CHECK IF THE DATA IS INSIDE THE RANGE
+#            #       OF AVAILABLE FACIES.
+#            #
+#            hard_data[ix,iy,iz] = data[i]
+#            nb_data_added = nb_data_added + 1
 
-        print('    Number of hard data added:', nb_data_added)
+#         print('    Number of hard data added:', nb_data_added)
            
            
 
