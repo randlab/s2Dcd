@@ -9,3 +9,4 @@ examples/02_*
 examples/03_*
 examples/04_*
 examples/deesse_easy
+src/s2Dcd/__pycache__/*.*

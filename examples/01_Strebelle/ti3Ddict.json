@@ -1,7 +1,7 @@
 {
-    "nx" : 52,   
-    "ny" : 71,   
-    "nz" : 64,   
+    "nx" : 250,   
+    "ny" : 250,   
+    "nz" : 250,   
     "sx" : 1.0,   
     "sy" : 1.0,   
     "sz" : 1.0,       
@@ -10,5 +10,5 @@
     "oz" : 0.0,       
     "nv" : 1,
     "varname" : "facies",
-    "name" : "ti3Dini.gslib"
+    "name" : "ti3D.gslib"
 }

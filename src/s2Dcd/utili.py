@@ -46,8 +46,6 @@ import sys
 import time
 import inspect
 import ntpath
-import numpy
-
 
 AUTHOR = 'Alessandro Comunian'
 
@@ -56,7 +54,6 @@ NB_DGT = 6
 
 # Number of significant figures for the "e" format
 SIG_FIG = 6
-
 
 def print_start(title=None):
     '''

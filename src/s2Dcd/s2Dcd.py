@@ -326,7 +326,8 @@ class SeqStep(object):
     NOTE: FOR THE MOMENT ONLY THE DEEESSE IS IMPLEMENTED
     """
 
-    def __init__(self, direct, level, param=None, nthreads=1):
+    def __init__(self, direct, level, param=None, nthreads=1, print_hd=False,
+                 print_sim=False):
         '''
         Initialization for the class :py:class:`SeqStep`.  All the
         parameters definitions are considered for a given simulation
@@ -363,6 +364,9 @@ class SeqStep(object):
         
         self.ti = param.TI
         self.nthreads = nthreads
+        self.print_hd = print_hd
+        self.print_sim = print_sim
+            
 
         # SEE THE OLDER VERSIONS FOR SUGGESTIONS. THIS COULD BE THE RIGHT
         # PLACE TO LOOK FOR FILES CONTAINING AUXILIARY VARIABLES OR
@@ -450,26 +454,32 @@ class SeqStep(object):
         if self.direct == "x":
             # Set the hard data to be used for the simulation
             curr_hd.nx = 1
+            curr_hd.ox = self.level
             curr_hd.val = np.reshape(hard_data.val[0,:,:,self.level],
-                                 (1,1,simODS.ny,simODS.nz))
+                                 (1,1,simODS.ny,simODS.nz))#, order="C")
             # Set the parameters for the simulation
             # NOTE: DOUBLE CHECK HERE IF "level" REFERS TO THE TRUE COORDINATE
             #       OR TO THE INDEX WITHIN THE MATRIX. DOUBLE CHECK ALSO FOR
             #       THE OTHER DIRECTIONS.
             curr_par.ox = self.level
-            
+            # CONTROLLARE CHE SIA LA COORDINATA VERA...
+
         elif self.direct == "y":
             curr_hd.ny = 1
+            curr_hd.oy = self.level
             curr_hd.val = np.reshape(hard_data.val[0, :, self.level, :], 
                                  (1,simODS.nx,1,simODS.nz), order="C")
             # Set the parameters for the simulation
-            curr_par.y = self.level
+            # CONTROLLARE CHE SIA LA COORDINATA VERA...
+            curr_par.oy = self.level
         elif self.direct == "z":       
             curr_hd.nz = 1
+            curr_hd.oz = self.level
             curr_hd.val = np.reshape(hard_data.val[0, self.level, :, :],
-                                 (1,simODS.nx,simODS.ny,1))
+                                 (1,simODS.nx,simODS.ny,1))#, order="C")
             # Set the parameters for the simulation
-            curr_par.z = self.level
+            # CONTROLLARE CHE SIA LA COORDINATA VERA...
+            curr_par.oz = self.level
             
         # gn.imgplot3d.drawImage3D_surface(curr_hd, excluded_value=np.nan, text="s2Dcd", show_edges=True)            
         # gn.imgplot3d.drawImage3D_slice(curr_hd, slice_normal_y=0,
@@ -494,13 +504,17 @@ class SeqStep(object):
             # No NaN, all the nodes have a valid value, no need to simulate.
             return 1
         # print("ACOMUNIAN")
-        # print(curr_par)
+        print(curr_par)
         # print(curr_par.dataImage)
         deesse_out = gn.deesseinterface.deesseRun(curr_par, 
                                                   nthreads=self.nthreads,
                                                   verbose=verbose)        
-        gn.img.writeImageVtk(curr_hd, "s2Dcd_step{0:06d}.vtk".format(step+1),
-                             data_type='int', missing_value=-9999999)
+        if self.print_hd:
+            gn.img.writeImageVtk(curr_hd, "s2Dcd_step{0:06d}_hd.vtk".format(step+1),
+                                 data_type='int', missing_value=-9999999)
+        if self.print_sim:
+            gn.img.writeImageVtk(deesse_out["sim"][0], "s2Dcd_step{0:06d}_sim.vtk".format(step+1),
+                                 data_type='int', missing_value=-9999999)            
         
         # print(deesse_out)
         
@@ -753,10 +767,13 @@ def sim_run(seq_steps, step_max, hard_data, simODS, nthreads=1,
     
     # Compute the number of np.nan in the results
     sum_nan = np.sum(np.isnan(hard_data.val))
+    perc_nan = 100*sum_nan/hard_data.val.size
     if ( sum_nan > 0):
         # Could be useful for debug purposes
         print('\n    WARNING: Some nodes were not simulated.')
-        print("        Number of NaN nodes: {0}".format(sum_nan))
+        print("        Number of NaN nodes: {0} out of {1} ({2:.2f}%)\n".format(sum_nan,
+                                                                   hard_data.val.size,
+                                                                   perc_nan))
     else:
         print('\n    All the domain completed!\n')
 
@@ -1350,7 +1367,7 @@ def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads):
     ''' 
 
     print("\n    Dimension of the simulation domain:"
-          " {0.nx:d} x {0.ny:d} x {0.nz:d}" \
+          " ({0.nx:d}x{0.ny:d}x{0.nz:d})" \
           .format(simODS))
 
     for dire, par_dir in zip(('x','y','z'),(par_Xnorm,
@@ -1437,7 +1454,8 @@ def create_lists( simODS, par_template, par_Xnorm, par_Ynorm, par_Znorm):
 
 
 
-def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads=1, pseudo3D=0):
+def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads=1,
+               print_hd=False, print_sim=True, pseudo3D=0):
     '''
     Creates a simple simulation sequence.
 
@@ -1487,7 +1505,8 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads=1, pseudo3D=0):
     for i in range(max(simODS.nx, simODS.ny, simODS.nz)):
         if ( ti_x and i < simODS.nx ):
             try:
-                seq.append(SeqStep( 'x', sim_path_Xnorm[i], par_Xnorm, nthreads))
+                seq.append(SeqStep( 'x', sim_path_Xnorm[i], par_Xnorm,
+                                   nthreads, print_hd, print_sim))
             except IndexError:
                 print("\n"
                       "    ERROR in 'create_seq'.\n"
@@ -1498,7 +1517,8 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads=1, pseudo3D=0):
                      
         if ( ti_y and i < simODS.ny ):
             try:
-                seq.append(SeqStep( 'y', sim_path_Ynorm[i], par_Ynorm, nthreads))
+                seq.append(SeqStep( 'y', sim_path_Ynorm[i], par_Ynorm,
+                                   nthreads, print_hd, print_sim))
             except IndexError:
                 print("\n"
                       "    ERROR in 'create_seq'.\n"
@@ -1508,7 +1528,8 @@ def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads=1, pseudo3D=0):
                       "but '{0}' was provided.\n".format(simODS.ny))
         if ( ti_z and i < simODS.nz ):
             try:
-                seq.append( SeqStep( 'z', sim_path_Znorm[i], par_Znorm, nthreads))
+                seq.append( SeqStep( 'z', sim_path_Znorm[i], par_Znorm,
+                                    nthreads, print_hd, print_sim))
             except IndexError:
                 print("\n"
                       "    ERROR in 'create_seq'.\n"
