@@ -18,65 +18,64 @@
 :Purpose:
     A module to apply the `s2Dcd` multiple-point simulation approach.
     At the moment it is implemented with the `DeeSse` MPS simulation engine,
-    but could be adapted easily to other MPS engines.
+    but could be adapted to other MPS engines.
  
 :File name:
     ``s2Dcd.py``
 
 :Version:
-    1.0 , 2022-04-14 :
+    .. note:: 
+        For the actual version number check the configuration files.
+        
+    2022-08-12 :
+        * Adapted to the geone version 1.1.1.
+    2022-04-14 :
         * Adapted to the new version of the DeeSse using the geone interface.
-    0.9.9 , 2018-01-23 :
+    2018-01-23 :
         * Solved one bug that prevented simulation perpendicular
           to axis *x*.
-
-    0.9.8 , 2017-12-15 :
+    2017-12-15 :
         * Solved one but related to casting some index.
-    0.9.6 , 2014-08-12 :
+    2014-08-12 :
         * Try to include the auxiliary variables treatment.
         * Changed name of the module related to the DS.
-    0.9.5 , 2013-11-15 :
+    2013-11-15 :
         * Converted to Python3 with `2to3`.
         * Corrected a bug in the function `matrioska_interval`.
         * Adapted to the new version of gslibnumpy. 
-    0.9.4 , 2012-09-05 :
+    2012-09-05 :
         * Last version before the movement to Python3
-    0.9.3 , 2012-09-04 :
+    2012-09-04 :
         * Tested on a simple case study with one thread and no
           auxiliary variables.
-    0.9.2, 2012-05-02 :
+    2012-05-02 :
         * Defined some variables to describe the range of integer values
           that the seed should take.
         * Corrected a bug related to bad parenthesis (thank you Andrea!)
-    0.9.1,  2012-05-02 :
+    2012-05-02 :
         * Added an option to better define when a problem is for categorical
           variables or for continuous ones.
         * Solved a bug (forgotten to print the `in` file in the case
           of multiple threads).
-    0.8,  2012-04-02 :
+    2012-04-02 :
         * Modified some structures in order to include them in a
           module containing some tools to deal with structured
           grids... in order to prepare the interface to the MPDS code.
-    0.7,  2012-02-24 :
+    2012-02-24 :
         * Using the variable :py:data:`no_data` the default value for
           the not yet simulated nodes can be re-defined with more
           flexibility.
-
-    0.6,  2012-02-23 :
+    2012-02-23 :
         * Added a functionality allowing to define a random seed.
-
         * Added a function to create a simple *standard* simulation
           sequence.
-
-    0.5,  2012-02-16 :
+    2012-02-16 :
         * added the class :py:class:`SeqStep` to  simplify notation.
-    0.4,  2012-02-16 :
+    2012-02-16 :
         * cleaned up some procedures and documentation.
-    0.3, :
         * implemented the treatment of auxiliary variables.
-    0.2, :
         * some improvements...
-    0.1, :
+    YYYY-MM-DD :
         * first version.
 
 :Authors:
@@ -85,61 +84,55 @@
 
 Usage
 -----
-
 See the examples in the corresponding directory and the documentation
 of the main functions.
 
+Notes
+-----
+Some legacy code is still present in this file, which is often commented.
+It is only intended to potentially guide some new development or adaptation
+to other MPS simulation engines.
 
 Limitations
 -----------
 auxiliary variables:
-   For the moment they are implemented only for the ``implala`` MPS
-   engine.
+   Not implemented. 
 
 number of variables:
-    `MPDS` can be used with only one variable.
+    Only one variable can be used.
 
 TODO
 ----
 
-* Include the usage of auxiliary variables when using all the MPS
-  engines.
-* Implement all the features that can be described in the parameter
-  files.
-* Deal with the connection problem that can raise when the licence
-  cannot be verified or the connection is slow.
-* Improve the output and input format, adding for example the SGeMS
-  binary input/output format (look for the format in mGstat, for
-  example)
+* Include the usage of auxiliary variables and vectorial training images.
+* Implement all the features (that makes sense in the s2Dcd approac) that can
+  be described in the parameter files.
+* Deal with the connection problem that can raise when the licence cannot be
+  verified or the connection is slow. The function `simul` contains
+  (commented) some come that was useful to deal with that. For the moment
+  that is not included in the latest version, where at the moment there
+  were no latency problems.
+* Improve the output and input format, adding for example the SGeMS binary
+  input/output format (look for the format in mGstat, for example)
 * For some simulation engines (like the one based on the snesim/impala engines), 
-  that can store information coming from threes/lists in and external file, it can be 
-  useful to allow the re-use of these.
-* Add some functionality to delete all the output files created,
-  something like *DEBUG* or *VERBOSE* mode.
-
+  that can store information coming from threes/lists in and external file,
+  it can be useful to allow the re-use of these. Keep this in mind in case
+  you want to adapt the s2Dcd to those engines.
+* Add some functionality to delete all the output files created, something like
+  DEBUG or VERBOSE mode.
+* Clean up the code of function that are not used anymore or implemented
+  directly in geone.
 
 '''
 
 
 # Import "standard" modules
-import glob
-import random
-import time
 import numpy
-import os
 import copy
-import sys
 import numpy as np
 
 # Import geone
 import geone as gn
-
-# Import "custom" modules
-# import s2Dcd.deesse as ds_interface REPLACED BY THE GEONE "deesseinterface"
-# import s2Dcd.gslibnumpy as gslibnumpy
-import s2Dcd.utili as utili
-# import s2Dcd.grid as grid
-import s2Dcd.ext as ext
 
 
 # Name of the executables of the MPS simulation code.
@@ -366,13 +359,11 @@ class SeqStep(object):
         self.nthreads = nthreads
         self.print_hd = print_hd
         self.print_sim = print_sim
-            
 
         # SEE THE OLDER VERSIONS FOR SUGGESTIONS. THIS COULD BE THE RIGHT
         # PLACE TO LOOK FOR FILES CONTAINING AUXILIARY VARIABLES OR
         # WHERE TO SET UP SOME PROPERTIES (FOR EXAMPLE THE DIMENSIONS OF THE
         # SEARCH NEIGHBORHOOD =0 ALONG THE RIGHT DIRECTION...)
-
         
     
     def __str__(self):
@@ -384,7 +375,7 @@ class SeqStep(object):
         return out
 
 
-    def simul(self, step, step_max, hard_data, simODS, rcp_lists, verbose=0):
+    def simul(self, step, step_max, hard_data, simODS, verbose=0, rcp_lists=False):
         '''
         Run a MPS simulation for a simulation step of a sequence.
 
@@ -439,7 +430,6 @@ class SeqStep(object):
         
         print("- slice simulated: {0.direct:s} = {0.level:4d}"
               "".format(self))  
-    
        
         #   
         # Set up the slice which contains the hard data
@@ -447,52 +437,35 @@ class SeqStep(object):
         # WARNING: 
         #     1) FOR THE MOMENT THERE IS THE LIMITATION OF USING ONLY ONE TI.
         #        HEREINAFTER THEN THE VALUE "0" SHOULD BE MANAGED ACCORDINGLY
-        #
-        #     2) WHEN ACCESSING THE TI WITH "VAL", THEN BE...    
         curr_hd = copy.deepcopy(hard_data)
         curr_par = copy.deepcopy(self.param)
         if self.direct == "x":
             # Set the hard data to be used for the simulation
             curr_hd.nx = 1
-            curr_hd.ox = self.level
+            curr_hd.ox = self.level*curr_par.sy
             curr_hd.val = np.reshape(hard_data.val[0,:,:,self.level],
                                  (1,1,simODS.ny,simODS.nz))#, order="C")
             # Set the parameters for the simulation
-            # NOTE: DOUBLE CHECK HERE IF "level" REFERS TO THE TRUE COORDINATE
-            #       OR TO THE INDEX WITHIN THE MATRIX. DOUBLE CHECK ALSO FOR
-            #       THE OTHER DIRECTIONS.
-            curr_par.ox = self.level
-            # CONTROLLARE CHE SIA LA COORDINATA VERA...
-
+            curr_par.ox = self.level*curr_par.sx
         elif self.direct == "y":
             curr_hd.ny = 1
-            curr_hd.oy = self.level
+            curr_hd.oy = self.level*curr_par.sy
             curr_hd.val = np.reshape(hard_data.val[0, :, self.level, :], 
                                  (1,simODS.nx,1,simODS.nz), order="C")
             # Set the parameters for the simulation
-            # CONTROLLARE CHE SIA LA COORDINATA VERA...
-            curr_par.oy = self.level
+            curr_par.oy = self.level*curr_par.sy
         elif self.direct == "z":       
             curr_hd.nz = 1
-            curr_hd.oz = self.level
+            curr_hd.oz = self.level*curr_par.sy
             curr_hd.val = np.reshape(hard_data.val[0, self.level, :, :],
                                  (1,simODS.nx,simODS.ny,1))#, order="C")
             # Set the parameters for the simulation
-            # CONTROLLARE CHE SIA LA COORDINATA VERA...
-            curr_par.oz = self.level
+            curr_par.oz = self.level*curr_par.sz
             
-        # gn.imgplot3d.drawImage3D_surface(curr_hd, excluded_value=np.nan, text="s2Dcd", show_edges=True)            
-        # gn.imgplot3d.drawImage3D_slice(curr_hd, slice_normal_y=0,
-        #                                show_bounds=True,   # add bounds (axis with graduation)
-        #                                text='TI')
-        # gn.imgplot3d.drawImage3D_surface(curr_hd, filtering_value=[1], 
-                                         # text='TI')
-        
         if isinstance(curr_hd, gn.img.Img):
             curr_par.dataImage = np.array([curr_hd])
         else:
             print("ERROR, wrong input type for dataImage!")
-        # gn.img.writeImageVtk(curr_hd, "s2Dcd_step{0:06d}.vtk".format(step+1), data_type='int')
 
         if not isinstance(curr_par, gn.deesseinterface.DeesseInput):
         # LATER ADD A MESSAGE IN THE LOG FILE...
@@ -503,23 +476,27 @@ class SeqStep(object):
         if(nb_nan == 0):
             # No NaN, all the nodes have a valid value, no need to simulate.
             return 1
-        # print("ACOMUNIAN")
-        print(curr_par)
+
+        # UNCOMMENT HERE IN CASE FOR DEBUGGING PURPOSES...
+        # print(curr_par)
         # print(curr_par.dataImage)
         deesse_out = gn.deesseinterface.deesseRun(curr_par, 
                                                   nthreads=self.nthreads,
                                                   verbose=verbose)        
         if self.print_hd:
-            gn.img.writeImageVtk(curr_hd, "s2Dcd_step{0:06d}_hd.vtk".format(step+1),
+            gn.img.writeImageVtk(curr_hd,
+                                 "s2Dcd_step{0:06d}_hd.vtk".format(step+1),
                                  data_type='int', missing_value=-9999999)
         if self.print_sim:
-            gn.img.writeImageVtk(deesse_out["sim"][0], "s2Dcd_step{0:06d}_sim.vtk".format(step+1),
+            gn.img.writeImageVtk(deesse_out["sim"][0],
+                                 "s2Dcd_step{0:06d}_sim.vtk".format(step+1),
                                  data_type='int', missing_value=-9999999)            
         
-        # print(deesse_out)
-        
-        
-        
+ 
+#
+# HEREINAFTER SOME LINES THAT WERE USEFUL TO COPE WITH SOME LATENCY IN THE
+# LICENSE CHEK.
+#        
 #         error_code = os.system(runSim)
 #         if error_code == ds_interface.LIC_ERR_CODE:
 #             for errcd in range(ds_interface.NB_LIC_WAIT):
@@ -552,16 +529,11 @@ class SeqStep(object):
 #         # Add the new hard data to the "storage" array
 #         add_hd(self, new_hd, hard_data, simODS)
 
-            # print(deesse_out) # ACOMUNIAN
         if self.direct == "x":
-            # print(deesse_out["sim"][0].val.shape)
             hard_data.val[0,:,:,self.level] = deesse_out["sim"][0].val[0,:,:,0]
         elif self.direct == "y":            
-            # print(deesse_out["sim"][0].val.shape)
-            
             hard_data.val[0,:,self.level,:] = deesse_out["sim"][0].val[0,:,0,:]
         elif self.direct == "z": 
-            # print(deesse_out["sim"][0].val.shape)
             hard_data.val[0,self.level,:,:] = deesse_out["sim"][0].val[0,0,:,:]
 
 
@@ -995,37 +967,37 @@ def sim_run(seq_steps, step_max, hard_data, simODS, nthreads=1,
 
 
     
-def addVtk2HdArchive(hard_data, facies):
-    """
-    A function to add all the VTK files contained into the current
-    directory into an hard data archive file (that is a 3D matrix
-    which once filled in will be the "final" simulation).
+# def addVtk2HdArchive(hard_data, facies):
+#     """
+#     A function to add all the VTK files contained into the current
+#     directory into an hard data archive file (that is a 3D matrix
+#     which once filled in will be the "final" simulation).
 
-    Parameters:
-        hard_data: string
-            Name of the file which contains all the conditioning data.
-        facies: string
-            A string containing the facies which are considered.
+#     Parameters:
+#         hard_data: string
+#             Name of the file which contains all the conditioning data.
+#         facies: string
+#             A string containing the facies which are considered.
 
-    .. warning::
-        This function is obsolete. It can be time consuming if a lot
-        of VTK files are present in the working directory.
+#     .. warning::
+#         This function is obsolete. It can be time consuming if a lot
+#         of VTK files are present in the working directory.
 
-    """
-    # REMOVE IT?
+#     """
+#     # REMOVE IT?
 
-    # Check if there was a previous simulated vtk which can be converted
-    # into hard data (and eventually convert it)
-    sim_files = glob.glob("*.vtk")
-    if(len(sim_files) == 0):
-        print('      No VTK files to be added to the archive available')
-    else:
-        for sim_file in sim_files:
-            print('      Adding the file "%s" to the hard data'
-                  ' archive...' % sim_file)
-            data, vtkReaderOutput = vn.vtk2numpy(sim_file)
-            # Compute where "data" should be added to "hard_data"
-            axis, coord = GetWhereToAddData(vtkReaderOutput)
+#     # Check if there was a previous simulated vtk which can be converted
+#     # into hard data (and eventually convert it)
+#     sim_files = glob.glob("*.vtk")
+#     if(len(sim_files) == 0):
+#         print('      No VTK files to be added to the archive available')
+#     else:
+#         for sim_file in sim_files:
+#             print('      Adding the file "%s" to the hard data'
+#                   ' archive...' % sim_file)
+#             data, vtkReaderOutput = vn.vtk2numpy(sim_file)
+#             # Compute where "data" should be added to "hard_data"
+#             axis, coord = GetWhereToAddData(vtkReaderOutput)
 
 
 def GetWhereToAddData(vtkReaderOutput):
@@ -1226,127 +1198,127 @@ def numpy2hd4MPDS(simODS, hd, seq):
     return (x, y, z, data)
                 
                 
-def print_result(hd, simODS, file_name):
-    '''
-    Print into an ouput file the simulation output.
+# def print_result(hd, simODS, file_name):
+#     '''
+#     Print into an ouput file the simulation output.
 
-    Parameters:
-        hd: numpy array
-            The numpy (3D) array containing all the simulated nodes.
-        simOSD: object of type :py:class:`Grid`
-            Contains the dimensions of the simulation domain.
-        file_name: string
-            Name of the output file. The extension can be 
-            "vtk" or "gslib".
+#     Parameters:
+#         hd: numpy array
+#             The numpy (3D) array containing all the simulated nodes.
+#         simOSD: object of type :py:class:`Grid`
+#             Contains the dimensions of the simulation domain.
+#         file_name: string
+#             Name of the output file. The extension can be 
+#             "vtk" or "gslib".
 
-    Returns:
-        Create the output file.
-        If some error occurs, returns -1.
-    '''
+#     Returns:
+#         Create the output file.
+#         If some error occurs, returns -1.
+#     '''
 
-    # NOTE: It could be improved using the interface VTK-Python
-    # provided by ParaView... but then there is the problem to be
-    # completely dependent on these modules...
+#     # NOTE: It could be improved using the interface VTK-Python
+#     # provided by ParaView... but then there is the problem to be
+#     # completely dependent on these modules...
 
-    file_name_root, file_ext = os.path.splitext(file_name) 
+#     file_name_root, file_ext = os.path.splitext(file_name) 
 
-    #    print("debug file_name:", file_name )
-    #    print("debug FILE EXT:", file_ext )
-    if file_ext == '.vtk':
-        vn.numpy2vtk(hd, file_name, simODS)
-    elif file_ext == '.gslib':
-        gslibnumpy.numpy2gslib((hd,), file_name)
-    else:
-        print('    Error in print_result, unknonw file type: %s'
-              % (file_ext))
-        return -1
+#     #    print("debug file_name:", file_name )
+#     #    print("debug FILE EXT:", file_ext )
+#     if file_ext == '.vtk':
+#         vn.numpy2vtk(hd, file_name, simODS)
+#     elif file_ext == '.gslib':
+#         gslibnumpy.numpy2gslib((hd,), file_name)
+#     else:
+#         print('    Error in print_result, unknonw file type: %s'
+#               % (file_ext))
+#         return -1
     
     
-def adaptAuxVarFile(seq, simODS):
-    """
-    Change the dimension in the VTK file containing the auxiliary
-    variable map in order to adapt it for the current 2D simulation.
+# def adaptAuxVarFile(seq, simODS):
+#     """
+#     Change the dimension in the VTK file containing the auxiliary
+#     variable map in order to adapt it for the current 2D simulation.
 
-    Parameters:
-        seq: object of type :py:class:`SeqStep`
-            Contains the information related to the current simulation
-            step.
-        simODS: object of type :py:class:`Grid`
-            Contains the dimension required to define a simulation domain.
+#     Parameters:
+#         seq: object of type :py:class:`SeqStep`
+#             Contains the information related to the current simulation
+#             step.
+#         simODS: object of type :py:class:`Grid`
+#             Contains the dimension required to define a simulation domain.
 
-    Returns:
-        A file containing a auxiliary variable whith dimensions
-        suitable for the current simulation step.
-    """
+#     Returns:
+#         A file containing a auxiliary variable whith dimensions
+#         suitable for the current simulation step.
+#     """
     
-    normDir = seq.direct # The direction normal to the current
-                         # simulation plane
-    currSlice = seq.level # The "level" of the current slice
-    auxFile = seq.auxvarti_file # Here the name of the file containing
-                                # the aux variable
+#     normDir = seq.direct # The direction normal to the current
+#                          # simulation plane
+#     currSlice = seq.level # The "level" of the current slice
+#     auxFile = seq.auxvarti_file # Here the name of the file containing
+#                                 # the aux variable
     
-    if not auxFile :
-        return 1
+#     if not auxFile :
+#         return 1
     
-    nx = simODS.nx
-    ny = simODS.ny
-    nz = simODS.ny
+#     nx = simODS.nx
+#     ny = simODS.ny
+#     nz = simODS.ny
     
-    dx = simODS.dx
-    dy = simODS.dy
-    dz = simODS.dz
+#     dx = simODS.dx
+#     dy = simODS.dy
+#     dz = simODS.dz
     
-    ox = simODS.ox
-    oy = simODS.oy
-    oz = simODS.oz
+#     ox = simODS.ox
+#     oy = simODS.oy
+#     oz = simODS.oz
     
-    data = vn.vtk2numpy(auxFile)[0]
-    print(data.shape)
+#     data = vn.vtk2numpy(auxFile)[0]
+#     print(data.shape)
     
-    f = open(auxFile, 'w')
+#     f = open(auxFile, 'w')
     
-    print("Aux file modified = ", auxFile)
+#     print("Aux file modified = ", auxFile)
     
-    print("# vtk DataFile Version 3.0", file=f)
-    print('Auxiliary variable "depth" Z', file=f)
-    print("ASCII", file=f)
-    print("DATASET STRUCTURED_POINTS", file=f)
-    if normDir == 'x':
-        print("DIMENSIONS 1 %d %d" % (ny, nz), file=f)
-        print("ORIGIN %f %f %f" % (ox + (currSlice ) * dx, oy, oz), file=f)
-        print("SPACING %f %f %f" % (dx, dy, dz), file=f)
-        print("POINT_DATA %d" % (ny * nz), file=f)
-        print("SCALARS facies float", file=f)
-        print("LOOKUP_TABLE default", file=f)
+#     print("# vtk DataFile Version 3.0", file=f)
+#     print('Auxiliary variable "depth" Z', file=f)
+#     print("ASCII", file=f)
+#     print("DATASET STRUCTURED_POINTS", file=f)
+#     if normDir == 'x':
+#         print("DIMENSIONS 1 %d %d" % (ny, nz), file=f)
+#         print("ORIGIN %f %f %f" % (ox + (currSlice ) * dx, oy, oz), file=f)
+#         print("SPACING %f %f %f" % (dx, dy, dz), file=f)
+#         print("POINT_DATA %d" % (ny * nz), file=f)
+#         print("SCALARS facies float", file=f)
+#         print("LOOKUP_TABLE default", file=f)
                 
-        for k in range(nz):
-            for j in range(ny):
-                print(data[0 , j, k], file=f)        
-    elif normDir == 'y':
-        print("DIMENSIONS %d 1 %d" % (nx, nz), file=f)
-        print("ORIGIN %f %f %f" % (ox, oy + (currSlice ) * dy, oz), file=f)
-        print("SPACING %f %f %f" % (dx, dy, dz), file=f)
-        print("POINT_DATA %d" % (nx * nz), file=f)
-        print("SCALARS facies float", file=f)
-        print("LOOKUP_TABLE default", file=f)
+#         for k in range(nz):
+#             for j in range(ny):
+#                 print(data[0 , j, k], file=f)        
+#     elif normDir == 'y':
+#         print("DIMENSIONS %d 1 %d" % (nx, nz), file=f)
+#         print("ORIGIN %f %f %f" % (ox, oy + (currSlice ) * dy, oz), file=f)
+#         print("SPACING %f %f %f" % (dx, dy, dz), file=f)
+#         print("POINT_DATA %d" % (nx * nz), file=f)
+#         print("SCALARS facies float", file=f)
+#         print("LOOKUP_TABLE default", file=f)
                 
-        for k in range(nz):
-            for i in range(nx):
-                print(data[i, 0 , k], file=f)        
-    elif normDir == 'z':
+#         for k in range(nz):
+#             for i in range(nx):
+#                 print(data[i, 0 , k], file=f)        
+#     elif normDir == 'z':
         
-        print("DIMENSIONS %d %d 1" % (nx, ny), file=f)
-        print("ORIGIN %f %f %f" % (ox, oy, oz + (currSlice ) * dz), file=f)
-        print("SPACING %f %f %f" % (dx, dy, dz), file=f)
-        print("POINT_DATA %d" % (nx * ny), file=f)
-        print("SCALARS facies float", file=f)
-        print("LOOKUP_TABLE default", file=f)
+#         print("DIMENSIONS %d %d 1" % (nx, ny), file=f)
+#         print("ORIGIN %f %f %f" % (ox, oy, oz + (currSlice ) * dz), file=f)
+#         print("SPACING %f %f %f" % (dx, dy, dz), file=f)
+#         print("POINT_DATA %d" % (nx * ny), file=f)
+#         print("SCALARS facies float", file=f)
+#         print("LOOKUP_TABLE default", file=f)
         
-        for j in range(ny):
-            for i in range(nx):
-                print(data[i, j, 0], file=f)
+#         for j in range(ny):
+#             for i in range(nx):
+#                 print(data[i, j, 0], file=f)
     
-    f.close()
+#     f.close()
 
 
 def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads):
@@ -1403,59 +1375,59 @@ def print_sim_info(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads):
         #               par_dir.aux_var_files[0], '"', sep='')
     
  
-def create_lists( simODS, par_template, par_Xnorm, par_Ynorm, par_Znorm):
-    """
-    Create the lists which will be used by *Impala* for the simulation.
+# def create_lists( simODS, par_template, par_Xnorm, par_Ynorm, par_Znorm):
+#     """
+#     Create the lists which will be used by *Impala* for the simulation.
 
-    This preliminary step is required and allows use *Impala* to
-    compute the MPS list only once, before starting the simulation,
-    and therefore save computing resources.
+#     This preliminary step is required and allows use *Impala* to
+#     compute the MPS list only once, before starting the simulation,
+#     and therefore save computing resources.
 
-    Parameters:
-        simODS: object of type :py:class:`Grid`
-            Contains all the info concerning the simulation domain.
-        par_template: impala_interface.Param
-            All the information contained in the `template.in` file.
-        par_Xnorm: object of type :py:class:`impala_interface.Param`
-            Information about the *Impala* parameters normal to the
-            direction *x*.
-        par_Ynorm: object of type :py:class:`impala_interface.Param`
-            Information about the *Impala* parameters normal to the
-            direction *y*.
-        par_Znorm: object of type :py:class:`impala_interface.Param`
-            Information about the *Impala* parameters normal to the
-            direction *z*.
+#     Parameters:
+#         simODS: object of type :py:class:`Grid`
+#             Contains all the info concerning the simulation domain.
+#         par_template: impala_interface.Param
+#             All the information contained in the `template.in` file.
+#         par_Xnorm: object of type :py:class:`impala_interface.Param`
+#             Information about the *Impala* parameters normal to the
+#             direction *x*.
+#         par_Ynorm: object of type :py:class:`impala_interface.Param`
+#             Information about the *Impala* parameters normal to the
+#             direction *y*.
+#         par_Znorm: object of type :py:class:`impala_interface.Param`
+#             Information about the *Impala* parameters normal to the
+#             direction *z*.
 
-    Returns: 
-        A list (in binary format) for each multi-grid level and for
-        each simulation direction is created in the current directory
-        running *Impala*.
+#     Returns: 
+#         A list (in binary format) for each multi-grid level and for
+#         each simulation direction is created in the current directory
+#         running *Impala*.
         
-    """
-    print('\n    *** Create the lists ***')
+#     """
+#     print('\n    *** Create the lists ***')
 
-    seq = []
+#     seq = []
 
-    # Check if there are training images along the given directions
-    ti_x = check_ti_file(par_Xnorm)
-    ti_y = check_ti_file(par_Ynorm)
-    ti_z = check_ti_file(par_Znorm)
-    if ti_x :
-        seq.append(SeqStep( 'x', 0, par_Xnorm))
-    if ti_y :
-        seq.append(SeqStep( 'y', 0, par_Ynorm))
-    if ti_z :
-        seq.append(SeqStep( 'z', 0, par_Znorm))
+#     # Check if there are training images along the given directions
+#     ti_x = check_ti_file(par_Xnorm)
+#     ti_y = check_ti_file(par_Ynorm)
+#     ti_z = check_ti_file(par_Znorm)
+#     if ti_x :
+#         seq.append(SeqStep( 'x', 0, par_Xnorm))
+#     if ti_y :
+#         seq.append(SeqStep( 'y', 0, par_Ynorm))
+#     if ti_z :
+#         seq.append(SeqStep( 'z', 0, par_Znorm))
 
 
-    for seq_step in seq:
-        simul_out = seq_step.create_list( simODS, par_template)
+#     for seq_step in seq:
+#         simul_out = seq_step.create_list( simODS, par_template)
 
 
 
 
 def create_seq(simODS, par_Xnorm, par_Ynorm, par_Znorm, nthreads=1,
-               print_hd=False, print_sim=True, pseudo3D=0):
+               print_hd=False, print_sim=False, pseudo3D=0):
     '''
     Creates a simple simulation sequence.
 
@@ -1674,8 +1646,6 @@ def file_name_sec(file_name, axe):
 #
 if __name__ == '__main__':
 
-    import numpy as np    
-
     #
     # test the function "matrioska_interval"
     #
@@ -1703,10 +1673,10 @@ if __name__ == '__main__':
     
     
                
-    print('    get_mid((1,2)):', get_mid((1,2)) )
-    print('    get_mid((7,45)):', get_mid((7,45)) )
-    print('    get_mid((1,20)):', get_mid((1,20)) )
-    print('    get_mid((6,11)):', get_mid((6,11)) )
+    # print('    get_mid((1,2)):', get_mid((1,2)) )
+    # print('    get_mid((7,45)):', get_mid((7,45)) )
+    # print('    get_mid((1,20)):', get_mid((1,20)) )
+    # print('    get_mid((6,11)):', get_mid((6,11)) )
 
     print("input:",  [(10,12),(15, 35)])
     print("out:", split_segms( [(10,12),(15, 35)]))

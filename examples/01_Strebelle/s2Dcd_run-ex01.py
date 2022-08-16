@@ -128,7 +128,7 @@ step_max = 1000000
 s2Dcd.print_sim_info(ds3Din, ds_yz_in, ds_xz_in, ds_xy_in, nthreads)
 
 # Create the simulation sequence
-seq = s2Dcd.create_seq(ds3Din, ds_yz_in, ds_xz_in, ds_xy_in, nthreads, print_hd=True)
+seq = s2Dcd.create_seq(ds3Din, ds_yz_in, ds_xz_in, ds_xy_in, nthreads)
 
 #
 # Simulation
@@ -138,6 +138,8 @@ s2Dcd.sim_run(seq, step_max, res3D, ds3Din, nthreads)
 # Stop counting time
 utili.print_stop(time_start)
 
-# gn.imgplot3d.drawImage3D_surface(res3D, text='TI', scalar_bar_kwargs={'vertical':True})
 
 gn.img.writeImageVtk(res3D, "res3D.vtk", missing_value=-9999999)
+
+# %% Print the result in 3D with PyVista
+gn.imgplot3d.drawImage3D_surface(res3D, text='TI', scalar_bar_kwargs={'vertical':True})
