@@ -40,7 +40,7 @@ For an animation that illustrated how the `s2Dcd` approach works, check [this li
 
 Have a look at [this
 link](examples/01_Strebelle/s2Dcd_run-ex01.ipynb) for a commented
-Jupyter notebook. You can also find the same file as Python script in the `examples` folder.
+Jupyter notebook. You can also find the same file as Python script in the `examples/01_Strebelle` folder.
 
 
 
