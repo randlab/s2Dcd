@@ -1,10 +1,10 @@
-# README
-
 ![s2Dcd logo](./logo/logo_thom.png "s2Dcd logo")
+
+# README
 
 This is the README file of the `s2Dcd`, a Python package that allows
 to obtain 3D multiple-point statistics (MPS) simulations by using only
-2D training images (TIs).  More detais about the methodology can be
+2D training images (TIs).  More details about the methodology can be
 found in the paper by *Comunian, Renard and Straubhaar*, DOI:
 [10.1016/j.cageo.2011.07.009](http://dx.doi.org/10.1016/j.cageo.2011.07.009).
 
@@ -26,19 +26,19 @@ Clone or download the `s2Dcd` package on a local directory, by using for example
 ```
 git clone git@github.com:randlab/s2Dcd.git
 ```
-Then inside the dowloaded directory
+Then inside the downloaded directory
 ```
 pip install .
 ```
 
 If the installation worked properly, then you should be able to perform an
-`import s2Dcd` from a Python console whithout any error/warning.
+`import s2Dcd` from a Python console without any error/warning.
 
 ## Examples
 
 ### Animation
 
-For an animation that illustrated how the `s2Dcd` approach works, check [this link](./logo/animation.md).
+For an animation that illustrates how the `s2Dcd` approach works, check [this link](./logo/animation.md).
 
 ### Simple example
 
