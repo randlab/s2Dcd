@@ -10,8 +10,8 @@ found in the paper by *Comunian, Renard and Straubhaar*, DOI:
 ## Requirements
 
 This version of `s2Dcd` heavily relies on the `geone` module. You can
-find more info about it and installation instructions at [this
-link](https://github.com/randlab/geone).
+find more info about it and installation instructions at the link
+[https://github.com/randlab/geone](https://github.com/randlab/geone).
 
 ## Quick start installation
 
@@ -25,22 +25,26 @@ Clone or download the `s2Dcd` package on a local directory, by using for example
 git clone git@github.com:randlab/s2Dcd.git
 ```
 Then inside the dowloaded directory
-
 ```
   pip install .
 ```
 
+If the installation worked properly, then you should be able to perform an
+`import s2Dcd` from a Python console whithout any error/warning.
 
-## Quick start examples
+## Examples
 
 ### Animation
+
 For an animation that illustrated how the `s2Dcd` approach works, check [this link](./logo/animation.md).
 
 ### Simple example
 
-Have a look at [this
-link](examples/01_Strebelle/s2Dcd_run-ex01.ipynb) for a commented
-Jupyter notebook. You can also find the same file as Python script in the `examples/01_Strebelle` folder.
+Have a look at
+[examples/01_Strebelle/s2Dcd_run-ex01.ipynb](examples/01_Strebelle/s2Dcd_run-ex01.ipynb)
+for a commented Jupyter notebook. You can also find the same file as
+Python script in
+[examples/01_Strebelle/s2Dcd_run-ex01.py](examples/01_Strebelle/s2Dcd_run-ex01.py).
 
 
 

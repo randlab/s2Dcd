@@ -1,1 +1,0 @@
-The script in this directory is WORK IN PROGRESS.
