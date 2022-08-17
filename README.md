@@ -6,9 +6,6 @@ to obtain 3D multiple-point statistics (MPS) simulations by using only
 found in the paper by *Comunian, Renard and Straubhaar*, DOI:
 [10.1016/j.cageo.2011.07.009](http://dx.doi.org/10.1016/j.cageo.2011.07.009).
 
-> **NOTE** If you use this module in your research, please don't
-    forget to cite the aforementioned paper.
-
 
 ## Requirements
 
@@ -32,22 +29,20 @@ Then inside the dowloaded directory
 ```
   pip install .
 ```
-to do
 
-## For more details...
 
-See the directory `docs` and the following links for more details about:
+## Quick start examples
 
-* [s2Dcd purpose](https://github.com/randlab/s2Dcd/blob/master/docs/purpose.rst)
-* [installation](https://github.com/randlab/s2Dcd/blob/master/docs/installation.rst)
-* [Usage examples](https://github.com/randlab/s2Dcd/blob/master/docs/examples.rst)
+### Animation
+For an animation that illustrated how the `s2Dcd` approach works, check [this link](./logo/animation.md).
 
-and more.
+### Simple example
 
-The complete documentation is also available as a PDF file
-[here](https://github.com/randlab/s2Dcd/blob/master/docs/_build/latex/s2dcd.pdf).
+Have a look at [this
+link](examples/01_Strebelle/s2Dcd_run-ex01.ipynb) for a commented
+Jupyter notebook. You can also find the same file as Python script in the `examples` folder.
 
-![Alt text](./logo/animation.gif?raw=true "Optional Title")
+
 
 
 
