@@ -48,6 +48,23 @@ for a commented Jupyter notebook. You can also find the same file as
 Python script in
 [examples/01_Strebelle/s2Dcd_run-ex01.py](examples/01_Strebelle/s2Dcd_run-ex01.py).
 
+## More info
+
+### Maintainers
+
+At the moment, the code is maintained by
+[A.Comunian](https://sites.unimi.it/alecomunian). Don't hesitate to
+contact him if you have some suggestions of questions about the
+`s2Dcd`.
+
+### Source
+
+The source file of the `s2Dcd` package is available both on *GitHub* and *Bitbucket* at the following links:
+
+- [https://github.com/randlab/s2Dcd](https://github.com/randlab/s2Dcd)
+- [https://bitbucket.org/alecomunian/s2dcd](https://bitbucket.org/alecomunian/s2dcd)
+
+
 
 
 
