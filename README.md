@@ -1,5 +1,10 @@
 ![s2Dcd logo](./logo/logo_thom.png "s2Dcd logo")
 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7006646.svg)](https://doi.org/10.5281/zenodo.7006646)
+
+
+
 # README
 
 This is the README file of the `s2Dcd`, a Python package that allows
