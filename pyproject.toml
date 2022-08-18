@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "s2Dcd"
-version = "0.0.7"
+version = "1.0.0"
 authors = [
 {name="Alessandro Comunian", email="alessandro.comunian@gmail.com"}
 ]
