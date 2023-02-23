@@ -25,12 +25,19 @@ find more info about it and installation instructions at the link
 > **NOTE:** To run the `s2Dcd`, a MPS simulation engine like the
 [DeeSse](http://www.randlab.org/research/deesse/) is needed! If you
 have installed the module `geone` then that should be already
-included.
+included. Note however that the version of the DeeSse included in the `geone` repository has
+**some limitations**. If you want to use the full functionalities of the package, please ask for a license.
 
 Clone or download the `s2Dcd` package on a local directory, by using for example:
 ```
 git clone git@github.com:randlab/s2Dcd.git
 ```
+or
+```
+git clone git@bitbucket.org:alecomunian/s2dcd.git
+```
+(actually, the two repositories should contain exactly the same version of the code.)
+
 Then inside the downloaded directory
 ```
 pip install .
