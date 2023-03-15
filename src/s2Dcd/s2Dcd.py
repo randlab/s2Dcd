@@ -431,6 +431,7 @@ class SeqStep(object):
         print("- slice simulated: {0.direct:s} = {0.level:4d}"
               "".format(self))  
        
+        
         #   
         # Set up the slice which contains the hard data
         #
@@ -439,26 +440,27 @@ class SeqStep(object):
         #        HEREINAFTER THEN THE VALUE "0" SHOULD BE MANAGED ACCORDINGLY
         curr_hd = copy.deepcopy(hard_data)
         curr_par = copy.deepcopy(self.param)
+        nv = curr_par.nv
         if self.direct == "x":
             # Set the hard data to be used for the simulation
             curr_hd.nx = 1
             curr_hd.ox = self.level*curr_par.sy
-            curr_hd.val = np.reshape(hard_data.val[0,:,:,self.level],
-                                 (1,1,simODS.ny,simODS.nz))#, order="C")
+            curr_hd.val = np.reshape(hard_data.val[:,:,:,self.level],
+                                 (nv,1,simODS.ny,simODS.nz))#, order="C")
             # Set the parameters for the simulation
             curr_par.ox = self.level*curr_par.sx
         elif self.direct == "y":
             curr_hd.ny = 1
             curr_hd.oy = self.level*curr_par.sy
-            curr_hd.val = np.reshape(hard_data.val[0, :, self.level, :], 
-                                 (1,simODS.nx,1,simODS.nz), order="C")
+            curr_hd.val = np.reshape(hard_data.val[:, :, self.level, :], 
+                                 (nv,simODS.nx,1,simODS.nz), order="C")
             # Set the parameters for the simulation
             curr_par.oy = self.level*curr_par.sy
         elif self.direct == "z":       
             curr_hd.nz = 1
             curr_hd.oz = self.level*curr_par.sy
-            curr_hd.val = np.reshape(hard_data.val[0, self.level, :, :],
-                                 (1,simODS.nx,simODS.ny,1))#, order="C")
+            curr_hd.val = np.reshape(hard_data.val[:, self.level, :, :],
+                                 (nv,simODS.nx,simODS.ny,1))#, order="C")
             # Set the parameters for the simulation
             curr_par.oz = self.level*curr_par.sz
             
@@ -478,7 +480,7 @@ class SeqStep(object):
             return 1
 
         # UNCOMMENT HERE IN CASE FOR DEBUGGING PURPOSES...
-        # print(curr_par)
+        # print(curr_par.__dict__)
         # print(curr_par.dataImage)
         deesse_out = gn.deesseinterface.deesseRun(curr_par, 
                                                   nthreads=self.nthreads,
@@ -529,12 +531,15 @@ class SeqStep(object):
 #         # Add the new hard data to the "storage" array
 #         add_hd(self, new_hd, hard_data, simODS)
 
+        # print(deesse_out)
+        # print("PROT")
+        # print(deesse_out["sim"][0].val[:,:,0,:])
         if self.direct == "x":
-            hard_data.val[0,:,:,self.level] = deesse_out["sim"][0].val[0,:,:,0]
+            hard_data.val[:,:,:,self.level] = deesse_out["sim"][0].val[:,:,:,0]
         elif self.direct == "y":            
-            hard_data.val[0,:,self.level,:] = deesse_out["sim"][0].val[0,:,0,:]
+            hard_data.val[:,:,self.level,:] = deesse_out["sim"][0].val[:,:,0,:]
         elif self.direct == "z": 
-            hard_data.val[0,self.level,:,:] = deesse_out["sim"][0].val[0,0,:,:]
+            hard_data.val[:,self.level,:,:] = deesse_out["sim"][0].val[:,0,:,:]
 
 
 #     def create_list(self, simODS, par_template):

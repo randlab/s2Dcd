@@ -77,6 +77,9 @@ The source file of the `s2Dcd` package is available both on *GitHub* and *Bitbuc
 - [https://bitbucket.org/alecomunian/s2dcd](https://bitbucket.org/alecomunian/s2dcd)
 
 
+### Aknowledgements
+
+Thank you Thomas C. for drafting the logo!
 
 
 
